@@ -1,0 +1,222 @@
+[
+    {
+    "title": "Muñeca",
+    "description": "Muñeca de trapo",
+    "price": 1200,
+    "img": "Sin Imagen",
+    "code": "toy001",
+    "stock": 50,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Camión",
+    "description": "Camión de juguete",
+    "price": 2000,
+    "img": "Sin Imagen",
+    "code": "toy002",
+    "stock": 30,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Lego",
+    "description": "Lego Star Wars",
+    "price": 3500,
+    "img": "Sin Imagen",
+    "code": "toy003",
+    "stock": 20,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Puzzle",
+    "description": "Puzzle 1000 piezas",
+    "price": 1500,
+    "img": "Sin Imagen",
+    "code": "toy004",
+    "stock": 60,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Pelota",
+    "description": "Pelota de fútbol",
+    "price": 800,
+    "img": "Sin Imagen",
+    "code": "toy005",
+    "stock": 100,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Carrito",
+    "description": "Carrito a control remoto",
+    "price": 2500,
+    "img": "Sin Imagen",
+    "code": "toy006",
+    "stock": 40,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Dinosaurio",
+    "description": "Dinosaurio de plástico",
+    "price": 700,
+    "img": "Sin Imagen",
+    "code": "toy007",
+    "stock": 80,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Juego de mesa",
+    "description": "Monopoly",
+    "price": 2200,
+    "img": "Sin Imagen",
+    "code": "toy008",
+    "stock": 25,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Avión",
+    "description": "Avión de juguete",
+    "price": 1500,
+    "img": "Sin Imagen",
+    "code": "toy009",
+    "stock": 55,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Barbie",
+    "description": "Barbie con accesorios",
+    "price": 3000,
+    "img": "Sin Imagen",
+    "code": "toy010",
+    "stock": 35,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Robot",
+    "description": "Robot interactivo",
+    "price": 5000,
+    "img": "Sin Imagen",
+    "code": "toy011",
+    "stock": 15,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Coche",
+    "description": "Coche de carreras",
+    "price": 1700,
+    "img": "Sin Imagen",
+    "code": "toy012",
+    "stock": 45,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Tren",
+    "description": "Tren eléctrico",
+    "price": 2800,
+    "img": "Sin Imagen",
+    "code": "toy013",
+    "stock": 22,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Transformers",
+    "description": "Optimus Prime",
+    "price": 4500,
+    "img": "Sin Imagen",
+    "code": "toy014",
+    "stock": 18,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Action Figure",
+    "description": "Spider-Man",
+    "price": 2500,
+    "img": "Sin Imagen",
+    "code": "toy015",
+    "stock": 40,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Puzzle",
+    "description": "Puzzle 500 piezas",
+    "price": 1000,
+    "img": "Sin Imagen",
+    "code": "toy016",
+    "stock": 65,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Títere",
+    "description": "Títere de mano",
+    "price": 700,
+    "img": "Sin Imagen",
+    "code": "toy017",
+    "stock": 75,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Cubos de construcción",
+    "description": "100 piezas",
+    "price": 1300,
+    "img": "Sin Imagen",
+    "code": "toy018",
+    "stock": 60,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Juego de té",
+    "description": "Juego de té infantil",
+    "price": 900,
+    "img": "Sin Imagen",
+    "code": "toy019",
+    "stock": 70,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    },
+    {
+    "title": "Moto",
+    "description": "Moto de juguete",
+    "price": 2000,
+    "img": "Sin Imagen",
+    "code": "toy020",
+    "stock": 40,
+    "category": "Juguetería",
+    "status": true,
+    "thumbnails": []
+    }
+]

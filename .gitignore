@@ -1,3 +1,4 @@
 node_modules
 saveCodeToTxt.js
 codeOutput.txt
+.env

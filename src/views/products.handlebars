@@ -9,7 +9,7 @@
         <p class="categorySte">{{description}}</p>
         <p>Price: ${{price}}</p>
         <p>Category: {{category}}</p>
-        <button class="pointer" id="add2Cart" onclick="window.open('/products/{{this._id}}', '_blank')">Ver
+        <button class="pointer hover" id="add2Cart" onclick="window.open('/products/{{this._id}}', '_blank')">Ver
             Mas</button><br>
 
         <!-- Formulario para agregar al carrito -->
@@ -23,7 +23,7 @@
         </form> --}}
         <form action="/api/carts/addProduct" method="POST" class="add-to-cart-form"></form>
         <input type="hidden" name="productId" value="{{this._id}}">
-        <button type="submit">Add to Cart</button>
+        <button type="submit" class="pointer hover">Add to Cart</button>
         </form>
 
         <br><br><br>
@@ -34,7 +34,7 @@
 <p>No products found on this page.</p>
 {{/if}}
 
-<a href="/" class="pointer songoro" id="add2Cart">Volver al Inicio</a>
+<a href="/" class="pointer songoro hover2 botoncito" id="add2Cart">Volver al Inicio</a>
 
 <br>
 <br>

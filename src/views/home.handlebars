@@ -10,19 +10,19 @@
     <div class="button-container01">
         <!-- Botón 1 -->
         <div class="button-wrapper01">
-            <button class="main-button01">Productos</button>
+            <button class="main-button01 hoverButton">Productos</button>
             <ul class="options01">
-                <li><button onclick="window.open('api/products')">Code Version</button></li>
-                <li><button onclick="window.open('/products')">Live Version</button></li>
+                <li><button onclick="window.open('api/products')" class="hoverButton">Code Version</button></li>
+                <li><button onclick="window.open('/products')" class="hoverButton">Live Version</button></li>
             </ul>
         </div>
 
         <!-- Botón 2 -->
         <div class="button-wrapper01">
-            <button class="main-button01">Carrito</button>
+            <button class="main-button01 hoverButton">Carrito</button>
             <ul class="options01">
-                <li><button onclick="window.open('api/carts', '_blank')">Code Version</button></li>
-                <li><button onclick="window.open('/carts', '_blank')">Live Version</button></li>
+                <li><button onclick="window.open('api/carts', '_blank')" class="hoverButton">Code Version</button></li>
+                <li><button onclick="window.open('/carts', '_blank')" class="hoverButton">Live Version</button></li>
             </ul>
         </div>
     </div>
@@ -31,7 +31,7 @@
 
 
 
-<div class="container guide">
+<div class="container-guide">
     <h1>Guía de Uso de la API de Productos</h1>
     <p>Bienvenido a la guía de uso de la API de Productos. Aquí encontrarás ejemplos de cómo utilizar los parámetros
         de
@@ -128,6 +128,37 @@ Ahora se abrirá Postman, recuerda el tipo de petición, pega y clickea 'SEND'`)
                 element.style.display = "none";
             }
         }
+    </script>
+    <script>// Selecciona todos los contenedores de botones
+        const buttons = document.querySelectorAll('.button-wrapper01');
+
+        // Agrega eventos de clic y hover a cada botón principal
+        buttons.forEach(buttonWrapper => {
+            const mainButton = buttonWrapper.querySelector('.main-button01');
+            const options = buttonWrapper.querySelector('.options01');
+
+            // Evento click para mostrar/ocultar las opciones
+            mainButton.addEventListener('click', () => {
+                // Remover la clase 'active' de todos los demás botones
+                buttons.forEach(btn => {
+                    if (btn !== buttonWrapper) {
+                        btn.classList.remove('active');
+                    }
+                });
+                // Alternar la clase 'active' del botón actual
+                buttonWrapper.classList.toggle('active');
+            });
+
+            // También puedes hacer que aparezcan las opciones cuando se pasa el mouse
+            buttonWrapper.addEventListener('mouseenter', () => {
+                buttonWrapper.classList.add('active');
+            });
+
+            // Y ocultarlas cuando se quita el mouse
+            buttonWrapper.addEventListener('mouseleave', () => {
+                buttonWrapper.classList.remove('active');
+            });
+        });
     </script>
 
 </div>

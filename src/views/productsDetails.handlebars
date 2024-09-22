@@ -21,6 +21,10 @@
         {{#each product.thumbnails}}
         <img src="{{this}}" alt="Thumbnail" style="max-width: 100px;">
         {{/each}}
+        <form action="/api/carts/addProduct" method="POST" class="add-to-cart-form"></form>
+        <input type="hidden" name="productId" value="{{this._id}}">
+        <button type="submit" class="pointer hover">Add to Cart</button>
+        </form>
     </div>
     <div class="btnbck">
         <a href="/products" class="btnBtp pointer" id="add2Cart">Back to Products</a>

@@ -3,12 +3,111 @@ body {
     margin: 0;
     padding: 0;
     background-color: #757474;
+    background-image: url(../img/wallGBlurred.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* Asegura que cubra toda la pantalla */
+    background-attachment: fixed;
+    /* Fija la imagen para que no se mueva al hacer scroll */
+    background-position: center;
+    /* Centra la imagen */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 @font-face {
     font-family: dinasty;
     src: url(../fonts/dienasty.otf);
 }
+
+/* 
+.button-container01 {
+    display: flex;
+    flex-direction: row;
+}
+
+.options01 */
+
+/*! ------------------------------- BOTONES INICIO */
+/* Estilos para los contenedores */
+
+.memin01 {
+    margin-bottom: 5rem;
+}
+
+.button-container01 {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.button-wrapper01 {
+    position: relative;
+    /* Posiciona el botón de forma relativa para que las opciones sean absolutas respecto a este */
+}
+
+/* Ocultar las opciones inicialmente */
+.options01 {
+    list-style-type: none;
+    padding: 0;
+    margin-left: 1px;
+    /* margin: 0; */
+    margin-top: 0px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000;
+}
+
+
+
+/* Estilos de los botones principales */
+.main-button01 {
+    padding: 10px 20px;
+    font-size: 16px;
+    width: 9rem;
+    cursor: pointer;
+}
+
+/* Estilos de las opciones */
+.options01 li {
+    margin: 0;
+    width: 8.9rem;
+}
+
+.hoverButton:hover {
+    background-color: #be2c2c;
+}
+
+.options01 button {
+    padding: 10px;
+    width: 100%;
+    /* Para que el botón llene todo el espacio disponible */
+    cursor: pointer;
+    border: none;
+    background-color: white;
+    /* Asegura el fondo blanco */
+    /* Alineación del texto a la izquierda */
+}
+
+/* Cuando el contenedor tiene la clase 'active', se muestran las opciones */
+.button-wrapper01.active .options01 {
+    visibility: visible;
+    /* Las opciones ahora son visibles */
+    opacity: 1;
+    /* Opciones completamente visibles */
+}
+
+
+
 
 .tipografia {
     font-family: dinasty;
@@ -98,9 +197,81 @@ h1 {
 
 .prodList {
     display: flex;
+    background-color: #000000c7;
+    border-radius: 1rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    margin-right: 15%;
+    margin-left: 12%;
+    /* padding-left: 27px; */
     flex-direction: column;
-    align-content: center;
     align-items: center;
+    border: 4px solid #1d08089c;
+    border-style: ridge;
+    align-content: center;
+}
+
+.cartsDetails1 {
+    display: flex;
+    background-color: #000000c7;
+    border-radius: 1rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    margin-right: 15%;
+    margin-left: 15%;
+    padding: 2%;
+    flex-direction: column;
+    align-items: center;
+    border: 4px solid #1d08089c;
+    border-style: ridge;
+    align-content: center;
+}
+
+.botoncito {
+    background-color: black;
+    padding: 6px;
+    text-decoration: none;
+    color: white;
+    font-size: large;
+    font-weight: bold;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.hover:hover {
+    background-color: rgba(134, 21, 21, 0.438);
+    color: white;
+    font-weight: bold;
+}
+
+.hover2:hover {
+    background-color: rgb(135 0 0);
+    color: white;
+    font-weight: bold;
+}
+
+.textPag {
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+.next-page, .textPag{
+    background-color: rgb(135 0 0);
+    padding: 6px;
+    text-decoration: none;
+    color: white;
+    font-size: large;
+    font-weight: bold;
+    border: 1px solid black;
+}
+
+.next-page:hover, .textPag:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(175, 5, 5);
+    font-weight: bold;
+    border: 1px solid rgb(0, 0, 0);
 }
 
 .categorySte {
@@ -111,6 +282,13 @@ h1 {
 
 .pointer {
     cursor: pointer;
+}
+
+.container-guide {
+    background-color: #000000e3;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 1rem;
 }
 
 /* Contenedor para centrar los enlaces */
@@ -127,7 +305,6 @@ h1 {
 }
 
 .textPag {
-    margin-left: 11px;
     margin-top: -17px;
     font-weight: bold;
 }

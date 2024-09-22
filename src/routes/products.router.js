@@ -73,6 +73,7 @@ router.post('/', async (req, res) => {
     }
 });
 
+//agregar stock a un product ID.
 router.put('/:pid', async (req, res) => {
     const id = req.params.pid;
     const updatedProduct = req.body;

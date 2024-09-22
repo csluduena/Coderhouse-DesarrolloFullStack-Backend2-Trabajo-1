@@ -90,3 +90,79 @@ Las contribuciones son bienvenidas. Si encuentras algún problema o tienes algun
 ## Autor
 
 Sebastián Ludueña - [Linkedin](https://www.linkedin.com/in/csluduena/) - [GitHub](https://github.com/csluduena) - [Web](https://csluduena.com.ar)
+
+```
+ExampleEntregaBackend2
+├─ .gitignore
+├─ package-lock.json
+├─ package.json
+├─ readme.md
+└─ src
+   ├─ app.js
+   ├─ config
+   │  └─ passport.js
+   ├─ controllers
+   │  ├─ authController.js
+   │  ├─ currentController.js
+   │  └─ productsController.js
+   ├─ dao
+   │  ├─ db
+   │  │  ├─ cart-manager-db.js
+   │  │  └─ product-manager-db.js
+   │  ├─ fs
+   │  │  └─ products.json
+   │  └─ models
+   │     ├─ cart.model.js
+   │     ├─ product.model.js
+   │     └─ user.model.js
+   ├─ database.js
+   ├─ public
+   │  ├─ css
+   │  │  └─ style.css
+   │  ├─ fonts
+   │  │  └─ dienasty.otf
+   │  ├─ img
+   │  │  ├─ Alexi-Hexed-1.jpg
+   │  │  ├─ carpiLoco.gif
+   │  │  ├─ carrito.png
+   │  │  ├─ carritoICO.png
+   │  │  ├─ carritoICO2.png
+   │  │  ├─ ESP-LTD-Alexi-Hexed.png
+   │  │  ├─ esp-ltd-kh-v-rdsp-kirk-hammett-guitarra-electrica-red-sparkle.jpg
+   │  │  ├─ esp-ltd-kh-v-rdsp-kirk-hammett-red-sparkle.png
+   │  │  ├─ fender-american-BurstRW.png
+   │  │  ├─ GibsonLesPaul50sTribute2016T.png
+   │  │  ├─ GibsonLesPaulStudio2016T.png
+   │  │  ├─ GibsonLesPaulTraditional2016T.png
+   │  │  ├─ GibsonSGFaded2016T.png
+   │  │  ├─ GibsonSGStandard2016T.png
+   │  │  ├─ guitarBann.gif
+   │  │  ├─ guitarBannW.gif
+   │  │  ├─ guitarBannW2.gif
+   │  │  ├─ PlayerStrat3-ColourSunburstPF.png
+   │  │  ├─ wallG.jpg
+   │  │  ├─ wallG2.png
+   │  │  ├─ wallGBlurred.jpg
+   │  │  └─ wallGBlurred.png
+   │  └─ js
+   │     └─ index.js
+   ├─ routes
+   │  ├─ cart.router.js
+   │  ├─ carts.router.js
+   │  ├─ products.router.js
+   │  └─ views.router.js
+   └─ views
+      ├─ addProduct.handlebars
+      ├─ cartDetails.handlebars
+      ├─ carts.handlebars
+      ├─ error.handlebars
+      ├─ home.handlebars
+      ├─ layouts
+      │  └─ main.handlebars
+      ├─ login.handlebars
+      ├─ products.handlebars
+      ├─ productsDetails.handlebars
+      ├─ realtimeproducts.handlebars
+      └─ register.handlebars
+
+```

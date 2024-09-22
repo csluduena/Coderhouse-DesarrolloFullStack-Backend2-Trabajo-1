@@ -1,3 +1,4 @@
+import 'dotenv/config'; // Carga y configura dotenv antes de otros imports
 import express from 'express';
 import exphbs from 'express-handlebars';
 import productsRouter from './routes/products.router.js';
@@ -7,6 +8,9 @@ import { Server } from 'socket.io';
 import './database.js';
 import ProductManager from './dao/db/product-manager-db.js';
 import bodyParser from 'body-parser'; // Importar body-parser usando ES Modules
+import passport from './config/passport.js'; // Importar la configuración personalizada de passport
+import cartsRouter from './routes/cart.router.js';  // Importa el cartsRouter
+
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -44,13 +48,20 @@ app.use(express.static('./src/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(passport.initialize());
+app.use('/api/sessions', viewsRouter);
+
 // Montar routers de API
 app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
 
 // Montar rutas de vistas
 app.use('/', viewsRouter);
 
 app.use('/favicon.ico', (req, res) => res.status(204).end());
+
+app.use(passport.initialize());
+app.use('/api/sessions', viewsRouter);
 
 // Manejo de WebSocket para actualizaciones en tiempo real
 io.on('connection', (socket) => {

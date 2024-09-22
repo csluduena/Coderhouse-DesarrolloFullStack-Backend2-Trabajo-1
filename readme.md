@@ -91,7 +91,7 @@ Las contribuciones son bienvenidas. Si encuentras algún problema o tienes algun
 
 Sebastián Ludueña - [Linkedin](https://www.linkedin.com/in/csluduena/) - [GitHub](https://github.com/csluduena) - [Web](https://csluduena.com.ar)
 
-```
+
 ExampleEntregaBackend2
 ├─ .gitignore
 ├─ package-lock.json
@@ -148,7 +148,6 @@ ExampleEntregaBackend2
    │     └─ index.js
    ├─ routes
    │  ├─ cart.router.js
-   │  ├─ carts.router.js
    │  ├─ products.router.js
    │  └─ views.router.js
    └─ views

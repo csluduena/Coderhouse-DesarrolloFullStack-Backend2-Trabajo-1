@@ -85,14 +85,14 @@ router.delete('/:uid', async (req, res) => {
 
 
 
-
+// Ruta para obtener la vista de todos los carritos
 router.get('/carts', async (req, res) => {
     try {
         const carts = await cartManager.getAllCarts();
-        res.render('carts.handlebars', { carts });
+        res.render('carts', { carts });
     } catch (error) {
         console.error('Error fetching carts for view:', error);
-        res.status(500).render('error', { message: 'Internal server error' });
+        res.status(500).send('Error fetching carts');
     }
 });
 

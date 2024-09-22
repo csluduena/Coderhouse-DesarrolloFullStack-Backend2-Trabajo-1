@@ -24,6 +24,24 @@ class CartManager {
         }
     }
 
+    async createCart(userId) {
+        try {
+            // Comprueba si ya existe un carrito para este usuario
+            const existingCart = await CartModel.findOne({ id: userId });
+            if (existingCart) {
+                throw new Error('El carrito ya existe para este usuario');
+            }
+
+            // Crea un nuevo carrito
+            const newCart = new CartModel({ id: userId, products: [] });
+            await newCart.save();
+            return newCart;
+        } catch (error) {
+            console.error('Error creando el carrito:', error);
+            throw error;
+        }
+    }
+
     async removeProductFromCart(userId, productId) {
         try {
             const userCart = await CartModel.findOne({ id: userId });
@@ -57,6 +75,16 @@ class CartManager {
         }
     }
 
+    async getAllCarts() {
+        try {
+            const carts = await CartModel.find();  // Puedes agregar filtros si es necesario
+            return carts;
+        } catch (error) {
+            console.error('Error fetching carts:', error);
+            throw error;
+        }
+    }
+
     async clearCart(userId) {
         try {
             const userCart = await CartModel.findOne({ id: userId });
@@ -71,7 +99,7 @@ class CartManager {
             throw error;
         }
     }
-}
 
+}
 
 export default CartManager;

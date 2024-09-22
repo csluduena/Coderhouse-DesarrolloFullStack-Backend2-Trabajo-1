@@ -1,54 +1,54 @@
-# Proyecto de Backend y Frontend para la Academia Coderhouse
+# Proyecto de Backend para la Academia Coderhouse
 
-Este proyecto es una continuación de la primera y segunda entrega para el curso de Backend en la academia Coderhouse. La tercera entrega incluye mejoras significativas tanto en el backend como en el frontend, con la incorporación de paginación, búsqueda avanzada y nuevas vistas. Para ver las entregas anteriores, puedes consultar los siguientes README:
-
-- [Primer Entrega](https://github.com/csluduena/Backend-Primer-Entrega/blob/main/README.md)
-- [Segunda Entrega](https://github.com/csluduena/Backend-Segunda-Entrega/blob/main/README.md)
+Este proyecto es la primera entrega del curso de Backend 2 en la academia Coderhouse, y es una continuación de las entregas anteriores del curso de Backend 1. Esta entrega incluye la implementación de funcionalidades clave relacionadas con la gestión de usuarios y carritos de compras.
 
 ## Características del Proyecto
 
 ### Backend
 
-- **Gestión de Productos:**
-  - **Operaciones CRUD:** Permite realizar operaciones de Crear, Leer, Actualizar y Eliminar productos mediante una API RESTful.
-  - **Endpoints Actualizados:**
-    - `GET /api/products`: Lista productos con parámetros de consulta para paginación, filtrado por categoría y disponibilidad, y ordenamiento por precio.
-      - **Parámetros de Consulta:**
-        - `limit`: Número máximo de elementos a devolver (por defecto 10).
-        - `page`: Página actual a retornar (por defecto 1).
-        - `query`: Filtro para buscar por categoría o disponibilidad.
-        - `sort`: Ordenamiento por precio (asc o desc).
-      - **Respuesta del Servidor:**
-        - `status`: Estado de la solicitud.
-        - `payload`: Resultado de los productos solicitados.
-        - `totalPages`, `prevPage`, `nextPage`, `page`, `hasPrevPage`, `hasNextPage`, `prevLink`, `nextLink`.
-    - `GET /api/products/:pid`: Obtiene un producto por su ID.
-    - `POST /api/products`: Crea un nuevo producto.
-    - `PUT /api/products/:pid`: Actualiza un producto existente.
-    - `DELETE /api/products/:pid`: Elimina un producto por su ID.
-
-  - **Incluye una Guía de Usuario, con Parámetros de Consulta como:**
-    - **Parámetro `limit`:**
-      - Podrás consultar el valor máximo de productos a devolver, cuenta con ejemplo en Código.
-    - **Parámetro `page`:**
-      - Con `page` podrás acceder a una página en concreto, cuenta con ejemplo en Código y Live Web.
-      - Nota: Si no hay productos en la página solicitada, se mostrará un mensaje indicando que no hay productos.
-    - **Parámetro `sort`:**
-      - Podrás consultar productos por ordenamiento ascendente, cuenta con ejemplo en Código y Live Web.
-      - Podrás consultar productos por ordenamiento descendente, cuenta con ejemplo en Código y Live Web.
-    - **Parámetro `query`:**
-      - Podrás consultar productos filtrando por categorías, cuenta con ejemplo en Código y Live Web.
-
+- **Gestión de Usuarios:**
+  - **Modelo de Usuario:**
+    - Campos:
+      - `first_name`: String
+      - `last_name`: String
+      - `email`: String (único)
+      - `age`: Number
+      - `password`: String (hash)
+      - `cart`: Id con referencia a `Carts`
+      - `role`: String (default: ‘user’)
+    - Se utilizó el paquete **bcrypt** para encriptar contraseñas mediante el método `hashSync`.
+  
 - **Gestión de Carritos:**
-  - **Nuevos Endpoints:**
-    - `DELETE /api/carts/:cid/products/:pid`: Elimina un producto específico del carrito.
-    - `PUT /api/carts/:cid`: Actualiza el carrito con un nuevo arreglo de productos.
-    - `PUT /api/carts/:cid/products/:pid`: Actualiza la cantidad de un producto en el carrito.
-    - `DELETE /api/carts/:cid`: Elimina todos los productos del carrito.
-  - **Modelo de Carts:**
-    - Los IDs de productos deben hacer referencia al modelo de Products y utilizar `populate` para obtener detalles completos de los productos en el carrito.
+  - **Creación de Carritos:**
+    - Se creó un carrito automáticamente para cada usuario registrado.
+  
+- **Autenticación y Autorización:**
+  - **Estrategias de Passport:**
+    - Implementadas para funcionar con el modelo de usuarios.
+  - **Sistema de Login:**
+    - Autenticación mediante JWT (JSON Web Tokens) para sesiones de usuario.
 
-### Frontend
+- **Estrategia “current”:**
+  - Permite extraer el token de la cookie y obtener el usuario asociado.
+  - Devuelve los datos del usuario si el token es válido, o un error en caso contrario.
+
+- **Rutas API:**
+  - Agregada la ruta `/api/sessions/current` para validar al usuario logueado y devolver sus datos asociados al JWT.
+
+### Endpoints
+
+- **Usuarios:**
+  - `POST /api/users`: Crear un nuevo usuario.
+  - `GET /api/users/:uid`: Obtener datos de un usuario por ID.
+  - `DELETE /api/users/:uid`: Eliminar un usuario por ID.
+
+- **Carritos:**
+  - `POST /api/carts`: Crear un nuevo carrito.
+  - `GET /api/carts/:cid`: Obtener un carrito por ID.
+  - `PUT /api/carts/:cid`: Actualizar un carrito existente.
+  - `DELETE /api/carts/:cid`: Eliminar un carrito por ID.
+
+  ### Frontend
 
 - **Interactividad en Tiempo Real:**
   - **Socket.io:** Actualiza la lista de productos en tiempo real en la interfaz de usuario sin necesidad de refrescar la página.
@@ -69,18 +69,19 @@ Este proyecto es una continuación de la primera y segunda entrega para el curso
 
 - **Node.js:** Plataforma de desarrollo backend.
 - **Express:** Framework de Node.js para construir aplicaciones web y APIs.
-- **Handlebars:** Motor de plantillas para el frontend.
-- **Socket.io:** Biblioteca para comunicación en tiempo real.
-- **CSS:** Estilización personalizada para el diseño del proyecto.
-- **Postman:** Herramienta para probar y documentar APIs.
+- **MongoDB:** Base de datos NoSQL para almacenamiento de datos.
+- **Mongoose:** ODM para MongoDB, facilita la interacción con la base de datos.
+- **Bcrypt:** Biblioteca para encriptar contraseñas.
+- **Passport.js:** Middleware para la autenticación.
+- **JWT:** Método para gestionar sesiones de usuario.
 
 ## Ejecución del Proyecto
 
-1. Clonar el repositorio.
-2. Instalar las dependencias con `npm install`.
-3. Ejecutar el servidor con `node app.js`.
-4. Acceder a la interfaz web en `http://localhost:8080`.
-5. Utilizar Postman u otro cliente API para probar los diferentes endpoints.
+1. Clona el repositorio.
+2. Instala las dependencias con `npm install`.
+3. Configura las variables de entorno necesarias (por ejemplo, `JWT_SECRET`).
+4. Ejecuta el servidor con `node app.js`.
+5. Utiliza Postman para probar los diferentes endpoints.
 
 ## Contribuciones
 

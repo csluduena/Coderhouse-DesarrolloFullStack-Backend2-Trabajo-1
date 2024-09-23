@@ -2,63 +2,46 @@ import express from "express";
 import ProductManager from "../dao/db/product-manager-db.js";
 import CartManager from '../dao/db/cart-manager-db.js';
 import { login } from '../controllers/authController.js';
-import { getCurrentUser } from '../controllers/currentController.js';
-import passport from '../config/passport.js';
 import UserModel from '../dao/models/user.model.js';
 import CartModel from '../dao/models/cart.model.js';
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
-import mongoose from "mongoose";
+import passport from '../config/passport.js';
+import { register } from '../controllers/authController.js';
 
-const router = express.Router();
-const productManager = new ProductManager();
-const cartManager = new CartManager();
+const router = express.Router(); // Crear una instancia del router
+const productManager = new ProductManager(); // Inicializar el ProductManager
+const cartManager = new CartManager(); // Inicializar el CartManager
 
+// Rutas de vistas
 router.get("/", (req, res) => {
-    res.render("home");
+    res.render("home"); // Renderiza la vista de inicio
 });
 
+// Rutas de autenticación
 router.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login'); // Renderiza la vista de login
 });
-router.post('/login', login);
+router.post('/login', login); // Ruta para manejar el login
+
+router.post('/api/sessions/register', register); // Ruta para el registro de usuario
+
 router.get('/register', (req, res) => {
-    res.render('register');
+    res.render('register'); // Renderiza la vista de registro
 });
+
+// Ruta para obtener información del usuario actual
 router.get('/current', passport.authenticate('current', { session: false }), (req, res) => {
-    res.json(req.user);
+    res.json(req.user); // Devuelve los datos del usuario autenticado
 });
+
+// Rutas protegidas con JWT
 router.use('/api/sessions', passport.authenticate('jwt', { session: false }));
 router.get('/api/sessions/current', passport.authenticate('current', { session: false }), (req, res) => {
-    res.json(req.user);
+    res.json(req.user); // Devuelve los datos del usuario autenticado
 });
 
-
-
-
-router.post('/register', async (req, res) => {
-    try {
-        const { first_name, last_name, email, age, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new UserModel({ first_name, last_name, email, age, password: hashedPassword });
-        await user.save();
-
-        // Crear un carrito para el usuario
-        const cart = new CartModel({ userId: user._id });
-        await cart.save();
-
-        // Asignar el carrito al usuario
-        user.cart = cart._id;
-        await user.save();
-
-        const token = jwt.sign({ sub: user._id, user }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, user });
-    } catch (error) {
-        console.error('Error creando carrito:', error);
-        res.status(500).json({ error: 'Error creando carrito' });
-    }
-});
-
+// Ruta para eliminar un usuario por ID
 router.delete('/:uid', async (req, res) => {
     try {
         const userId = req.params.uid;
@@ -70,32 +53,18 @@ router.delete('/:uid', async (req, res) => {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Ruta para obtener la vista de todos los carritos
 router.get('/carts', async (req, res) => {
     try {
         const carts = await cartManager.getAllCarts();
-        res.render('carts', { carts });
+        res.render('carts', { carts }); // Renderiza la vista de carritos
     } catch (error) {
         console.error('Error fetching carts for view:', error);
         res.status(500).send('Error fetching carts');
     }
 });
 
+// Ruta para obtener productos con paginación y ordenamiento
 router.get("/products", async (req, res) => {
     try {
         const { page = 1, limit = 5, sort = 'asc', query = '' } = req.query;
@@ -131,6 +100,7 @@ router.get("/products", async (req, res) => {
     }
 });
 
+// Ruta para obtener detalles de un producto específico
 router.get("/products/:pid", async (req, res) => {
     try {
         const productId = req.params.pid;
@@ -144,7 +114,7 @@ router.get("/products/:pid", async (req, res) => {
             return;
         }
 
-        res.render("productsDetails", { product });
+        res.render("productsDetails", { product }); // Renderiza la vista de detalles del producto
     } catch (error) {
         console.error("Error getting product:", error);
         res.status(500).json({
@@ -154,6 +124,7 @@ router.get("/products/:pid", async (req, res) => {
     }
 });
 
+// Ruta para obtener productos en tiempo real
 router.get("/realtimeproducts", async (req, res) => {
     try {
         const { sort = 'asc', query = '' } = req.query;
@@ -165,14 +136,15 @@ router.get("/realtimeproducts", async (req, res) => {
             return validSort === 'asc' ? a.price - b.price : b.price - a.price;
         });
 
-        res.render('realtimeproducts', { products: sortedProducts });
+        res.render('realtimeproducts', { products: sortedProducts }); // Renderiza la vista de productos en tiempo real
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener productos' });
     }
 });
 
+// Ruta para agregar un nuevo producto
 router.get("/products/add", (req, res) => {
-    res.render("addProduct");
+    res.render("addProduct"); // Renderiza la vista para agregar un producto
 });
 
-export default router;
+export default router; // Exporta el router

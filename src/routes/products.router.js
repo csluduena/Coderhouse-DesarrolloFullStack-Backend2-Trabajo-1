@@ -1,9 +1,10 @@
 import express from 'express';
-import ProductManager from '../dao/db/product-manager-db.js'; 
+import ProductManager from '../dao/db/product-manager-db.js';
 
-const router = express.Router();
-const productManager = new ProductManager(); 
+const router = express.Router(); // Crear una instancia del router
+const productManager = new ProductManager(); // Inicializar el ProductManager
 
+// Ruta para obtener todos los productos con paginación, ordenamiento y filtrado
 router.get('/', async (req, res) => {
     try {
         const { limit = 10, page = 1, sort = 'asc', query = '' } = req.query;
@@ -15,6 +16,7 @@ router.get('/', async (req, res) => {
             query,
         });
 
+        // Enviar respuesta con información de productos
         res.json({
             status: 'success',
             payload: products.docs,
@@ -37,6 +39,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Ruta para obtener un producto específico por ID
 router.get('/:pid', async (req, res) => {
     const id = req.params.pid;
 
@@ -48,7 +51,7 @@ router.get('/:pid', async (req, res) => {
             });
         }
 
-        res.json(product);
+        res.json(product); // Enviar el producto encontrado
     } catch (error) {
         console.error("Error getting product", error);
         res.status(500).json({
@@ -57,6 +60,7 @@ router.get('/:pid', async (req, res) => {
     }
 });
 
+// Ruta para agregar un nuevo producto
 router.post('/', async (req, res) => {
     const newProduct = req.body;
 
@@ -73,7 +77,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-//agregar stock a un product ID.
+// Ruta para actualizar un producto por ID (agregar stock, etc.)
 router.put('/:pid', async (req, res) => {
     const id = req.params.pid;
     const updatedProduct = req.body;
@@ -91,6 +95,7 @@ router.put('/:pid', async (req, res) => {
     }
 });
 
+// Ruta para eliminar un producto por ID
 router.delete('/:pid', async (req, res) => {
     const id = req.params.pid;
 
@@ -107,4 +112,4 @@ router.delete('/:pid', async (req, res) => {
     }
 });
 
-export default router;
+export default router; // Exporta el router

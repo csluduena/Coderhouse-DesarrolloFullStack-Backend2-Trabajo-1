@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,26 +8,25 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/indexHLB.css">
 </head>
+
 <body>
     <header class="main-header">
         <nav class="nav-bar">
             <div class="nav-left">
-                {{#if user}}
-                <p>Bienvenido, {{user.first_name}}</p>
-                <a href="/logout" class="logout-button">Cerrar sesión</a>
-                {{else}}
                 <a href="/login" class="login-link">Login</a>
                 <span class="separator">|</span>
                 <a href="/register" class="register-link">Are you new? Register here</a>
                 <span class="separator">|</span>
-                {{/if}}
+
                 <div class="button-container01">
                     <!-- Botón 1 -->
                     <div class="button-wrapper01">
                         <button class="main-button01 hoverButton">Productos</button>
                         <ul class="options01">
-                            <li><button onclick="window.open('api/products')" class="hoverButton">Code Version</button></li>
-                            <li><button onclick="window.open('/products')" class="hoverButton">Live Version</button></li>
+                            <li><button onclick="window.open('api/products')" class="hoverButton">Code Version</button>
+                            </li>
+                            <li><button onclick="window.open('/products')" class="hoverButton">Live Version</button>
+                            </li>
                         </ul>
                     </div>
 
@@ -34,15 +34,12 @@
                     <div class="button-wrapper01">
                         <button class="main-button01 hoverButton">Carrito</button>
                         <ul class="options01">
-                            <li><button onclick="window.open('api/carts', '_blank')" class="hoverButton">Code Version</button></li>
-                            <li><button onclick="window.open('/carts', '_blank')" class="hoverButton">Live Version</button></li>
+                            <li><button onclick="window.open('api/carts', '_blank')" class="hoverButton">Code
+                                    Version</button></li>
+                            <li><button onclick="window.open('/carts', '_blank')" class="hoverButton">Live
+                                    Version</button></li>
                         </ul>
                     </div>
-
-                    <!-- Botón solo en home -->
-                    {{#if isHome}}
-                    <button class="special-button">Botón Solo en Home</button>
-                    {{/if}}
 
                     <span class="separator2">|</span>
                 </div>
@@ -52,6 +49,7 @@
             </div>
         </nav>
     </header>
+
 
     {{{body}}}
 
@@ -94,4 +92,5 @@
         });
     </script>
 </body>
+
 </html>

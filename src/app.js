@@ -7,10 +7,10 @@ import http from 'http';
 import { Server } from 'socket.io';
 import './database.js';
 import ProductManager from './dao/db/product-manager-db.js';
-import bodyParser from 'body-parser'; // Importar body-parser usando ES Modules
+// import bodyParser from 'body-parser'; // Importar body-parser usando ES Modules
 import passport from './config/passport.js'; // Importar la configuración personalizada de passport
-import cartsRouter from './routes/cart.router.js';  // Importa el cartsRouter
-
+import cartsRouter from './routes/cart.router.js'; // Importa el cartsRouter
+import cookieParser from 'cookie-parser';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -26,7 +26,7 @@ const hbs = exphbs.create({
     }
 });
 
-// Registrar el helper para calcular el precio total (si aún es necesario)
+// Registrar el helper para calcular el precio total
 hbs.handlebars.registerHelper('calculateTotalPrice', function (products) {
     let total = 0;
     products.forEach(product => {
@@ -43,31 +43,24 @@ app.set('views', './src/views');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('./src/public'));
-
-// Middleware para manejar JSON y datos del cuerpo de las solicitudes
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(passport.initialize());
-app.use('/api/sessions', viewsRouter);
+// app.use(bodyParser.json()); // Comentado porque express.json() ya lo maneja
+// app.use(bodyParser.urlencoded({ extended: true })); // Comentado porque express.urlencoded() ya lo maneja
+app.use(passport.initialize()); // Inicializa Passport para manejar autenticaciones
+app.use(cookieParser()); // Middleware para manejar cookies
 
 // Montar routers de API
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+app.use('/api/sessions', viewsRouter); // Rutas para la autenticación de sesiones
 
 // Montar rutas de vistas
-app.use('/', viewsRouter);
+app.use('/', viewsRouter); // Rutas para las vistas
 
-app.use('/favicon.ico', (req, res) => res.status(204).end());
+app.use('/favicon.ico', (req, res) => res.status(204).end()); // Manejo de favicon
 
-app.use(passport.initialize());
-app.use('/api/sessions', viewsRouter);
-
+// Modificar la ruta principal para no pasar información de usuario
 app.get('/', (req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.redirect('/login');
-    }
-    res.redirect('/home');
+    res.render('home'); // Renderiza la vista principal
 });
 
 // Manejo de WebSocket para actualizaciones en tiempo real

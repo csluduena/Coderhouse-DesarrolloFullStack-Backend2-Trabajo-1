@@ -91,7 +91,7 @@ Las contribuciones son bienvenidas. Si encuentras algún problema o tienes algun
 
 Sebastián Ludueña - [Linkedin](https://www.linkedin.com/in/csluduena/) - [GitHub](https://github.com/csluduena) - [Web](https://csluduena.com.ar)
 
-
+```
 ExampleEntregaBackend2
 ├─ .gitignore
 ├─ package-lock.json
@@ -116,8 +116,13 @@ ExampleEntregaBackend2
    │     ├─ product.model.js
    │     └─ user.model.js
    ├─ database.js
+   ├─ middleware
+   │  └─ auth.js
    ├─ public
    │  ├─ css
+   │  │  ├─ indexHLB.css
+   │  │  ├─ login.css
+   │  │  ├─ register.css
    │  │  └─ style.css
    │  ├─ fonts
    │  │  └─ dienasty.otf
@@ -163,3 +168,5 @@ ExampleEntregaBackend2
       ├─ productsDetails.handlebars
       ├─ realtimeproducts.handlebars
       └─ register.handlebars
+
+```

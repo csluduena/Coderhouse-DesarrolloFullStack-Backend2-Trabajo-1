@@ -1,94 +1,3 @@
-{{!-- <div class="container"></div>
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="card-title">Iniciar sesión</h2>
-                <!-- login.handlebars -->
-                <form action="/login" method="post">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email">
-
-
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password">
-
-
-                    <input type="submit" value="Login">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-
-<!-- Modal de éxito -->
-<div class="modal fade" id="loginSuccessModal" tabindex="-1" role="dialog" aria-labelledby="loginSuccessModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="loginSuccessModalLabel">¡Bienvenido!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Has iniciado sesión correctamente.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de error -->
-<div class="modal fade" id="loginErrorModal" tabindex="-1" role="dialog" aria-labelledby="loginErrorModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="loginErrorModalLabel">Error</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Ha ocurrido un error al iniciar sesión. Por favor, inténtelo de nuevo.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    $(document).ready(function () {
-    const loginSuccess = {{ loginSuccess }};
-    const loginError = {{ loginError }};
-    const registerSuccess = {{ registerSuccess }};
-    const registerError = {{ registerError }};
-
-    if (loginSuccess) {
-        $('#loginSuccessModal').modal('show');
-    }
-
-    if (loginError) {
-        $('#loginErrorModal').modal('show');
-    }
-
-    if (registerSuccess) {
-        $('#registerSuccessModal').modal('show');
-    }
-
-    if (registerError) {
-        $('#registerErrorModal').modal('show');
-    }
-    });
-</script> --}}
-
 <link rel="stylesheet" href="/css/login.css">
 
 <div class="containerLo"></div>
@@ -144,37 +53,55 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        // Manejamos el evento de envío del formulario
         $('#loginForm').on('submit', function (event) {
             event.preventDefault(); // Prevenir la redirección por defecto
+
+            const email = $('#email').val();
+            const password = $('#password').val();
+
+            if (!email || !password) {
+                $('#loginErrorModal').fadeIn();
+                return;
+            }
+
+            console.log("Formulario enviado, enviando datos al servidor...");
 
             $.ajax({
                 type: 'POST',
                 url: '/login',
                 data: $(this).serialize(),
                 success: function (response) {
-                    // Si el inicio de sesión es exitoso, muestra el modal de éxito
-                    $('#loginSuccessModal').fadeIn();
+                    if (response.token) {
+                        localStorage.setItem('token', response.token);
+                        $('#loginSuccessModal').fadeIn();
+                    } else {
+                        $('#loginErrorModal').fadeIn();
+                    }
                 },
                 error: function (xhr) {
-                    // Si hay un error, muestra el modal de error
                     $('#loginErrorModal').fadeIn();
                 }
             });
         });
 
-        // Manejo de eventos para los botones de OK
+        // Manejo de eventos para los botones de OK en los modales
         $('#okSuccess').click(function () {
+            console.log("Cerrando modal de éxito y redirigiendo a la página principal...");
             window.location.href = '/'; // Redirige a la página de inicio
         });
 
         $('#okError').click(function () {
+            console.log("Ocultando modal de error...");
             $('#loginErrorModal').fadeOut(); // Oculta el modal de error
         });
 
         // Cierre del modal al hacer clic en la X
         $('#closeSuccessModal, #closeErrorModal').click(function () {
+            console.log("Cerrando modal...");
             $(this).closest('.modalLo').fadeOut(); // Oculta el modal correspondiente
         });
     });
@@ -213,4 +140,3 @@
         font-size: 20px;
     }
 </style>
-

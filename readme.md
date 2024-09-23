@@ -163,5 +163,3 @@ ExampleEntregaBackend2
       ├─ productsDetails.handlebars
       ├─ realtimeproducts.handlebars
       └─ register.handlebars
-
-```

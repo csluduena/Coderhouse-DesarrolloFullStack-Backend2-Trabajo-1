@@ -1,12 +1,11 @@
 {{!-- No necesitas el DOCTYPE, html, head o body aquí --}}
 <h1 class="tipografia">Guitar Store</h1>
-<hr>
 <!-- Ícono del carrito -->
 {{!-- <a href="/carts">
     <img src="/img/carrito.png" alt="Carrito" style="width: 40px; height: 40px;">
 </a> --}}
 <br>
-<div class="memin01">
+{{!-- <div class="memin01">
     <div class="button-container01">
         <!-- Botón 1 -->
         <div class="button-wrapper01">
@@ -26,7 +25,7 @@
             </ul>
         </div>
     </div>
-</div>
+</div> --}}
 
 
 
@@ -129,37 +128,17 @@ Ahora se abrirá Postman, recuerda el tipo de petición, pega y clickea 'SEND'`)
             }
         }
     </script>
-    <script>// Selecciona todos los contenedores de botones
-        const buttons = document.querySelectorAll('.button-wrapper01');
 
-        // Agrega eventos de clic y hover a cada botón principal
-        buttons.forEach(buttonWrapper => {
-            const mainButton = buttonWrapper.querySelector('.main-button01');
-            const options = buttonWrapper.querySelector('.options01');
-
-            // Evento click para mostrar/ocultar las opciones
-            mainButton.addEventListener('click', () => {
-                // Remover la clase 'active' de todos los demás botones
-                buttons.forEach(btn => {
-                    if (btn !== buttonWrapper) {
-                        btn.classList.remove('active');
-                    }
-                });
-                // Alternar la clase 'active' del botón actual
-                buttonWrapper.classList.toggle('active');
-            });
-
-            // También puedes hacer que aparezcan las opciones cuando se pasa el mouse
-            buttonWrapper.addEventListener('mouseenter', () => {
-                buttonWrapper.classList.add('active');
-            });
-
-            // Y ocultarlas cuando se quita el mouse
-            buttonWrapper.addEventListener('mouseleave', () => {
-                buttonWrapper.classList.remove('active');
-            });
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Oculta el botón si estamos en la página de inicio
+            const backToHomeBtn = document.getElementById('backToHomeBtn');
+            if (window.location.pathname === '/') {
+                backToHomeBtn.style.display = 'none';
+            }
         });
     </script>
+
 
 </div>
 </body>

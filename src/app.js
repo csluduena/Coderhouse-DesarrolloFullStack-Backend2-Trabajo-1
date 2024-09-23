@@ -63,6 +63,13 @@ app.use('/favicon.ico', (req, res) => res.status(204).end());
 app.use(passport.initialize());
 app.use('/api/sessions', viewsRouter);
 
+app.get('/', (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.redirect('/login');
+    }
+    res.redirect('/home');
+});
+
 // Manejo de WebSocket para actualizaciones en tiempo real
 io.on('connection', (socket) => {
     console.log('New client connected');

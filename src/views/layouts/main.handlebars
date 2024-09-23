@@ -4,23 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
-    <link rel="stylesheet" href="./css/style.css"> <!-- Asegúrate de tener un archivo de estilos si lo usas -->
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/indexHLB.css">
 </head>
 <body>
+    <header class="main-header">
+        <nav class="nav-bar">
+            <div class="nav-left">
+                {{#if user}}
+                <p>Bienvenido, {{user.first_name}}</p>
+                <a href="/logout" class="logout-button">Cerrar sesión</a>
+                {{else}}
+                <a href="/login" class="login-link">Login</a>
+                <span class="separator">|</span>
+                <a href="/register" class="register-link">Are you new? Register here</a>
+                <span class="separator">|</span>
+                {{/if}}
+                <div class="button-container01">
+                    <!-- Botón 1 -->
+                    <div class="button-wrapper01">
+                        <button class="main-button01 hoverButton">Productos</button>
+                        <ul class="options01">
+                            <li><button onclick="window.open('api/products')" class="hoverButton">Code Version</button></li>
+                            <li><button onclick="window.open('/products')" class="hoverButton">Live Version</button></li>
+                        </ul>
+                    </div>
+
+                    <!-- Botón 2 -->
+                    <div class="button-wrapper01">
+                        <button class="main-button01 hoverButton">Carrito</button>
+                        <ul class="options01">
+                            <li><button onclick="window.open('api/carts', '_blank')" class="hoverButton">Code Version</button></li>
+                            <li><button onclick="window.open('/carts', '_blank')" class="hoverButton">Live Version</button></li>
+                        </ul>
+                    </div>
+
+                    <!-- Botón solo en home -->
+                    {{#if isHome}}
+                    <button class="special-button">Botón Solo en Home</button>
+                    {{/if}}
+
+                    <span class="separator2">|</span>
+                </div>
+            </div>
+            <div class="nav-right">
+                <a href="/carts" class="cart-icon"></a>
+            </div>
+        </nav>
+    </header>
+
     {{{body}}}
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-    <!-- Footer -->
-<footer class="site-footer">
-    <div class="footer-content">
-        <p>&copy; 2024 Sebastián Ludueña</p>
-        <div class="footer-links">
-            <a href="https://www.linkedin.com/in/csluduena" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="https://github.com/csluduena" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="https://csluduena.com.ar" target="_blank" rel="noopener noreferrer">Web</a>
+    <a href="/" id="backToHomeBtn" class="pointer songoro hover2 botoncito">Volver al Inicio</a>
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Sebastián Ludueña</p>
+            <div class="footer-links">
+                <a href="https://www.linkedin.com/in/csluduena" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://github.com/csluduena" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://csluduena.com.ar" target="_blank" rel="noopener noreferrer">Web</a>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
+    <script>
+        // Código JavaScript para manejar los botones
+        const buttons = document.querySelectorAll('.button-wrapper01');
+        buttons.forEach(buttonWrapper => {
+            const mainButton = buttonWrapper.querySelector('.main-button01');
+            const options = buttonWrapper.querySelector('.options01');
+
+            mainButton.addEventListener('click', () => {
+                buttons.forEach(btn => {
+                    if (btn !== buttonWrapper) {
+                        btn.classList.remove('active');
+                    }
+                });
+                buttonWrapper.classList.toggle('active');
+            });
+
+            buttonWrapper.addEventListener('mouseenter', () => {
+                buttonWrapper.classList.add('active');
+            });
+
+            buttonWrapper.addEventListener('mouseleave', () => {
+                buttonWrapper.classList.remove('active');
+            });
+        });
+    </script>
 </body>
 </html>

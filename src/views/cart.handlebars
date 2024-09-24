@@ -1,0 +1,55 @@
+{{!-- <h1 class="tipografia">My Cart</h1>
+
+{{#if cart}}
+<div class="cart-item0">
+    <h2 class="cart-id0">Cart ID: {{cart._id}}</h2>
+    <p class="total-quantity0">Total Products: {{cart.products.length}}</p>
+    <div class="products-list0">
+        {{#each cart.products}}
+        <div class="product-item0">
+            <p class="product-id0">Product ID: {{this.product._id}}</p>
+            <p class="product-title0">Title: {{this.product.title}}</p>
+            <p class="product-price0">Price: ${{this.product.price}}</p>
+            <p class="product-quantity0">Quantity: {{this.quantity}}</p>
+        </div>
+        {{/each}}
+    </div>
+    <p class="cart-total">Total Price: ${{calculateTotalPrice cart.products}}</p>
+    <a href="/checkout" class="btnCheckout">Proceed to Checkout</a>
+</div>
+{{else}}
+<p class="no-carts0">No products in your cart</p>
+{{/if}} --}}
+
+<h1>Detalles del Carrito</h1>
+
+{{#if products.length}}
+<table>
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each products}}
+        <tr>
+            <td>
+                <img src="{{this.product.img}}" alt="{{this.product.title}}" style="width: 50px; height: auto;">
+                <!-- Imagen del producto -->
+                {{this.product.title}} <!-- Nombre del producto -->
+            </td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.product.price}}</td>
+            <td>{{multiply this.quantity this.product.price}}</td> <!-- Subtotal -->
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h2>Total: {{totalPrice}}</h2>
+{{else}}
+<p>No hay productos en el carrito.</p>
+{{/if}}

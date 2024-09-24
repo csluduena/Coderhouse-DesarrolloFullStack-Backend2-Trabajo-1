@@ -1,4 +1,4 @@
-import 'dotenv/config'; // Carga y configura dotenv antes de otros imports
+import 'dotenv/config';
 import express from 'express';
 import exphbs from 'express-handlebars';
 import productsRouter from './routes/products.router.js';
@@ -7,18 +7,20 @@ import http from 'http';
 import { Server } from 'socket.io';
 import './database.js';
 import ProductManager from './dao/db/product-manager-db.js';
-// import bodyParser from 'body-parser'; // Importar body-parser usando ES Modules
-import passport from './config/passport.js'; // Importar la configuración personalizada de passport
-import cartsRouter from './routes/cart.router.js'; // Importa el cartsRouter
-import cookieParser from 'cookie-parser';
+import passport from './config/passport.js';
+import cartRouter from './routes/cart.router.js';
+import authRouter from './routes/auth.router.js';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 
-// Configuración de Handlebars
+// Configuración de handlebars
 const hbs = exphbs.create({
+    helpers: {
+        multiply: (a, b) => a * b
+    },
     defaultLayout: 'main',
     runtimeOptions: {
         allowProtoPropertiesByDefault: true,
@@ -26,44 +28,64 @@ const hbs = exphbs.create({
     }
 });
 
-// Registrar el helper para calcular el precio total
-hbs.handlebars.registerHelper('calculateTotalPrice', function (products) {
-    let total = 0;
-    products.forEach(product => {
-        total += product.quantity * product.product.price;
-    });
-    return total;
-});
-
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.set('views', './src/views');
 
-// Middleware
+// Middlewares globales
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('./src/public'));
-// app.use(bodyParser.json()); // Comentado porque express.json() ya lo maneja
-// app.use(bodyParser.urlencoded({ extended: true })); // Comentado porque express.urlencoded() ya lo maneja
-app.use(passport.initialize()); // Inicializa Passport para manejar autenticaciones
-app.use(cookieParser()); // Middleware para manejar cookies
 
-// Montar routers de API
+// Rutas API
+app.use('/api', cartRouter);
 app.use('/api/products', productsRouter);
-app.use('/api/carts', cartsRouter);
-app.use('/api/sessions', viewsRouter); // Rutas para la autenticación de sesiones
+app.use('/api/sessions', viewsRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/auth', authRouter); 
 
-// Montar rutas de vistas
-app.use('/', viewsRouter); // Rutas para las vistas
+// Ruta raíz para vistas
+app.use('/', viewsRouter);
 
-app.use('/favicon.ico', (req, res) => res.status(204).end()); // Manejo de favicon
+// Favicon
+app.use('/favicon.ico', (req, res) => res.status(204).end());
 
-// Modificar la ruta principal para no pasar información de usuario
+// Ruta principal
 app.get('/', (req, res) => {
-    res.render('home'); // Renderiza la vista principal
+    res.render('home');
 });
 
-// Manejo de WebSocket para actualizaciones en tiempo real
+// Manejo de rutas no encontradas (404)
+app.get('*', (req, res) => {
+    res.status(404).send('Route not found');
+});
+
+// Manejo de errores global
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+app.post('/login', async (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            return next(err); // Pasar el error al siguiente middleware
+        }
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        req.logIn(user, { session: false }, async (err) => {
+            if (err) {
+                return next(err);
+            }
+            // Generar el token JWT aquí
+            const token = jwt.sign({ sub: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            return res.json({ token }); // Devolver el token al cliente
+        });
+    })(req, res, next);
+});
+
+// Configuración de Socket.io
 io.on('connection', (socket) => {
     console.log('New client connected');
 
@@ -92,12 +114,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// Iniciar servidor
+// Inicio del servidor
 httpServer.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
-});
-
-// Manejo de rutas no encontradas
-app.get('*', (req, res) => {
-    res.status(400).send('Route not found');
 });

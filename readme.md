@@ -103,8 +103,10 @@ ExampleEntregaBackend2
    │  └─ passport.js
    ├─ controllers
    │  ├─ authController.js
+   │  ├─ cartController.js
    │  ├─ currentController.js
-   │  └─ productsController.js
+   │  ├─ productsController.js
+   │  └─ views.controller.js
    ├─ dao
    │  ├─ db
    │  │  ├─ cart-manager-db.js

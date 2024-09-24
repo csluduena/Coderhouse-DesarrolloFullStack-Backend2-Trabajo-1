@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/indexHLB.css">
 </head>
@@ -14,9 +15,9 @@
         <nav class="nav-bar">
             <div class="nav-left">
                 <a href="/login" class="login-link">Login</a>
-                <span class="separator">|</span>
+                <span class="separator" id="ocultSep">|</span>
                 <a href="/register" class="register-link">Are you new? Register here</a>
-                <span class="separator">|</span>
+                <span class="separator" id="ocultSep2">|</span>
 
                 <div class="button-container01">
                     <!-- Botón 1 -->
@@ -36,16 +37,17 @@
                         <ul class="options01">
                             <li><button onclick="window.open('api/carts', '_blank')" class="hoverButton">Code
                                     Version</button></li>
-                            <li><button onclick="window.open('/carts', '_blank')" class="hoverButton">Live
+                            <li><button onclick="window.open('/cart', '_blank')" class="hoverButton">Live
                                     Version</button></li>
                         </ul>
                     </div>
 
-                    <span class="separator2">|</span>
+                    <span class="separator2" id="ocultSep3">|</span>
+                    <button class="main-button01 hoverButton" id="logoutButton" onclick="logout()">Logout</button>
                 </div>
             </div>
             <div class="nav-right">
-                <a href="/carts" class="cart-icon"></a>
+                <a href="/cart" class="cart-icon"></a>
             </div>
         </nav>
     </header>
@@ -53,8 +55,29 @@
 
     {{{body}}}
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <a href="/" id="backToHomeBtn" class="pointer songoro hover2 botoncito">Volver al Inicio</a>
+
+    <!-- Modal de Confirmación de Cierre de Sesión -->
+    <div id="logoutModalLogStyle" class="modalLogStyle">
+        <div class="cardLogStyle">
+            <div class="card-bodyLogStyle">
+                <span class="closeLogStyle" onclick="closeLogoutModal()">&times;</span>
+                <h2 class="card-titleLogStyle">Logout</h2>
+                <p class="LttrLogStyle">¿Estás seguro de que quieres cerrar sesión?</p>
+                <div class="btnFlx">
+                    <button id="confirmLogoutLogStyle" class="submitLogStyle">OK</button>
+                    <button id="cancelLogoutLogStyle" onclick="closeLogoutModal()"
+                        class="submitLogStyle">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <footer class="site-footer">
         <div class="footer-content">
             <p>&copy; 2024 Sebastián Ludueña</p>
@@ -91,6 +114,113 @@
             });
         });
     </script>
+
+    <script>
+        // Función para comprobar si hay un usuario logueado en la sesión local
+        function checkUserSession() {
+            const token = localStorage.getItem('token'); // Comprobar si hay un token
+            const userName = localStorage.getItem('first_name'); // Obtener el nombre del usuario
+
+            const loginLink = document.querySelector('.login-link');
+            const registerLink = document.querySelector('.register-link');
+            const logoutButton = document.querySelector('.button-container01 .main-button01[onclick="logout()"]');
+            const ocultarSeparador = document.getElementById('ocultSep');
+            const ocultarSeparador2 = document.getElementById('ocultSep2');
+            const ocultarSeparador3 = document.getElementById('ocultSep3');
+            const userNameOnScreen = document.getElementById('loggedName');
+
+            if (token) {
+                // Si hay un token, se considera que el usuario está logueado
+                loginLink.style.display = 'none';
+                registerLink.style.display = 'none';
+                logoutButton.style.display = 'inline-block'; // Mostrar botón de logout
+                ocultarSeparador.style.display = 'none';
+                ocultarSeparador2.style.display = 'none';
+                ocultarSeparador3.style.display = 'inline-block';
+
+            } else {
+                // Si no hay token, el usuario no está logueado
+                loginLink.style.display = 'inline-block';
+                registerLink.style.display = 'inline-block';
+                logoutButton.style.display = 'none'; // Ocultar botón de logout
+                ocultarSeparador.style.display = 'inline-block';
+                ocultarSeparador2.style.display = 'inline-block';
+                ocultarSeparador3.style.display = 'none';
+            }
+        }
+
+        // Función para manejar los botones
+        function setupButtonHandlers() {
+            const buttons = document.querySelectorAll('.button-wrapper01');
+            buttons.forEach(buttonWrapper => {
+                const mainButton = buttonWrapper.querySelector('.main-button01');
+                const options = buttonWrapper.querySelector('.options01');
+
+                mainButton.addEventListener('click', () => {
+                    buttons.forEach(btn => {
+                        if (btn !== buttonWrapper) {
+                            btn.classList.remove('active');
+                        }
+                    });
+                    buttonWrapper.classList.toggle('active');
+                });
+
+                buttonWrapper.addEventListener('mouseenter', () => {
+                    buttonWrapper.classList.add('active');
+                });
+
+                buttonWrapper.addEventListener('mouseleave', () => {
+                    buttonWrapper.classList.remove('active');
+                });
+            });
+        }
+
+        // Llama a las funciones para verificar el estado de la sesión y configurar los botones al cargar la página
+        window.onload = () => {
+            checkUserSession();
+            setupButtonHandlers();
+        };
+
+        function logout() {
+            localStorage.removeItem('token'); // Eliminar el token de la sesión local
+            window.location.href = '/'; // Redirigir a la ruta de logout
+        }
+    </script>
+
+    <script>
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            alert('Has cerrado sesión.');
+            window.location.href = '/login'; // Redirige a la página de login
+        });
+    </script>
+
+    <script>
+        // Función para abrir el modal de logout
+        function openLogoutModal() {
+            const modal = document.getElementById('logoutModalLogStyle');
+            modal.style.display = 'block';
+        }
+
+        // Función para cerrar el modal
+        function closeLogoutModal() {
+            const modal = document.getElementById('logoutModalLogStyle');
+            modal.style.display = 'none';
+        }
+
+        // Maneja el evento del botón de logout
+        function logout() {
+            openLogoutModal(); // Abre el modal de confirmación
+        }
+
+        // Maneja la confirmación del cierre de sesión
+        document.getElementById('confirmLogoutLogStyle').onclick = function () {
+            localStorage.removeItem('token'); // Elimina el token de la sesión local
+            window.location.href = '/'; // Redirige a la página principal
+        };
+    </script>
+
+
 </body>
 
 </html>

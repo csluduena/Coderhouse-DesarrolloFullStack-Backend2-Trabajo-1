@@ -23,6 +23,7 @@ passport.use('jwt', new Strategy({
     } catch (error) {
         return done(error);
     }
+
 }));
 
 passport.use('local', new LocalStrategy({
@@ -65,5 +66,6 @@ passport.use('current', new Strategy({
         return done(error);
     }
 }));
+
 
 export default passport;

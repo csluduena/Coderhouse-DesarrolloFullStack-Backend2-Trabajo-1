@@ -1,23 +1,19 @@
 import ProductModel from "../models/product.model.js";
 
 class ProductManager {
-
     async addProduct({ title, description, price, img, code, stock, category, thumbnails }) {
         try {
-            // Validación de campos obligatorios
             if (!title || !description || !price || !code || !stock || !category) {
                 console.log("All fields are mandatory");
                 return;
             }
 
-            // Verificación de unicidad del código del producto
-            const existingProduct = await ProductModel.findOne({ code: code });
+            const existingProduct = await ProductModel.findOne({ code });
             if (existingProduct) {
                 console.log("Product code must be unique");
                 return;
             }
 
-            // Creación del nuevo producto
             const newProduct = new ProductModel({
                 title,
                 description,
@@ -32,7 +28,6 @@ class ProductManager {
 
             await newProduct.save();
             console.log("Product added successfully");
-
         } catch (error) {
             console.log("Error adding product", error);
             throw error;
@@ -42,8 +37,6 @@ class ProductManager {
     async getProducts({ limit = 10, page = 1, sort, query } = {}) {
         try {
             const skip = (page - 1) * limit;
-
-            // Opciones de consulta para filtro por categoría o estado
             let queryOptions = {};
             if (query) {
                 queryOptions = {
@@ -53,23 +46,17 @@ class ProductManager {
                     ]
                 };
             }
-
-            // Opciones de ordenamiento
             const sortOptions = {};
             if (sort) {
                 if (sort === 'asc' || sort === 'desc') {
                     sortOptions.price = sort === 'asc' ? 1 : -1;
                 }
             }
-
-            // Consulta a la base de datos
             const products = await ProductModel
                 .find(queryOptions)
                 .sort(sortOptions)
                 .skip(skip)
                 .limit(limit);
-
-            // Contar productos totales
             const totalProducts = await ProductModel.countDocuments(queryOptions);
 
             const totalPages = Math.ceil(totalProducts / limit);

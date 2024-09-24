@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import CartModel from "./cart.model.js"; // Importa el modelo de carrito
 
 const userSchema = new mongoose.Schema({
     first_name: {
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     cart: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Cart",
+        ref: "Cart", // Referencia al modelo de carrito
     },
     role: {
         type: String,
@@ -28,15 +29,13 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-// Hash de la contraseña antes de guardarla
 userSchema.pre("save", async function (next) {
     if (this.isModified("password")) {
-        this.password = bcrypt.hash(this.password, 10);
+        this.password = bcrypt.hashSync(this.password, 10);
     }
     next();
 });
 
-// Método para comparar contraseñas
 userSchema.methods.comparePassword = async function (password) {
     console.log('Comparando:', password, 'con:', this.password);
     return await bcrypt.compare(password, this.password);

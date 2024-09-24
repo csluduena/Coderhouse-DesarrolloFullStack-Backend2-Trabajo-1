@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
     stock: {
         type: Number,
         default: 1000
-    }, // Aquí agregamos el stock
+    },
     img: {
         type: String,
     },
@@ -41,7 +41,7 @@ const productSchema = new mongoose.Schema({
     thumbnails: {
         type: [String],
     },
-})
+});
 
 productSchema.plugin(mongoosePaginate);
 

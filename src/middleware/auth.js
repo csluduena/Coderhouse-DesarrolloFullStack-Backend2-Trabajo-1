@@ -55,16 +55,17 @@ let revokedTokens = []; // Array para almacenar tokens revocados
 
 // Middleware para autenticar el token JWT
 export const authenticateJWT = (req, res, next) => {
-    const token = req.header('Authorization')?.split(' ')[1]; // Asume que el token viene en el header Authorization
+    const token = req.header('Authorization')?.split(' ')[1];
 
     if (!token) {
         return res.status(401).json({ message: 'Acceso denegado. No se proporcionó un token.' });
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verifica el token con tu clave secreta
-        req.user = decoded; // Agrega los datos del usuario al objeto req
-        next(); // Pasa al siguiente middleware/controlador
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Usuario decodificado:', decoded); // Log de usuario decodificado
+        req.user = decoded;
+        next();
     } catch (error) {
         return res.status(403).json({ message: 'Token inválido.' });
     }

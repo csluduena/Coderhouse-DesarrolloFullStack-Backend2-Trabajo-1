@@ -35,7 +35,16 @@
 <p>No hay productos en el carrito.</p>
 <a href="/products">Ir a la tienda</a>
 {{/if}} --}}
-<head>
+
+
+
+
+
+
+
+
+
+{{!-- <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
@@ -68,4 +77,15 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> --}}
+
+
+
+<h1>Detalles del Carrito</h1>
+<ul>
+    {{#each cart.products}}
+        <li>
+            Producto ID: {{this.product._id}} - Cantidad: {{this.quantity}}
+        </li>
+    {{/each}}
+</ul>

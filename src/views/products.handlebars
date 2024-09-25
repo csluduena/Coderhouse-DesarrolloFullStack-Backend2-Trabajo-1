@@ -11,12 +11,11 @@
         <p>Category: {{category}}</p>
         <button class="pointer hover" onclick="window.open('/products/{{this._id}}', '_blank')">Ver Mas</button><br>
 
-        <!-- El formulario ahora usa el cartId que viene desde el controlador -->
-        <form action="/api/cart/{{cartId}}/products/{{this._id}}" method="POST" class="add-to-cart-form">
-            <input type="hidden" name="quantity" value="1"> <!-- Puedes usar un input para la cantidad -->
-            <button type="submit" class="pointer hover">Add to Cart</button>
+        <form action="/api/carts/addProduct" method="POST" class="add-to-cart-form"></form>
+        <input type="hidden" name="productId" value="{{this._id}}">
+        <button type="submit" class="pointer hover">Add to Cart</button>
         </form>
-        
+
         <br><br><br>
     </div>
     {{/each}}

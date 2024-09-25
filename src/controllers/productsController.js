@@ -43,7 +43,7 @@ export const getProducts = async (req, res) => {
         const cartId = userCart ? userCart._id : null; // Asegúrate de pasar el cartId
 
         // Renderiza la vista de productos con el cartId y los productos
-        res.render('products', { productos: products, cartId });
+        res.render('products', { products, cartId });
     } catch (error) {
         console.error('Error fetching products:', error);
         res.status(500).send('Error fetching products');

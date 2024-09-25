@@ -8,11 +8,12 @@ import { Server } from 'socket.io';
 import './database.js';
 import ProductManager from './dao/db/product-manager-db.js';
 import passport from './config/passport.js';
-import cartRouter from './routes/cart.router.js';
+//import cartRouter from './routes/cart.router.js';
 import authRouter from './routes/auth.router.js';
 import session from 'express-session'; // Importa express-session
 import path from 'path';
 import { fileURLToPath } from 'url'; // Esto es necesario para obtener __dirname en ESModules
+import { cartRouter, router } from './routes/cart.router.js';
 
 // Configuración para obtener __dirname en ESModules
 const __filename = fileURLToPath(import.meta.url);
@@ -35,6 +36,8 @@ const hbs = exphbs.create({
         allowProtoMethodsByDefault: true,
     }
 });
+
+
 
 app.engine('handlebars', hbs.engine); // Configurar el motor de Handlebars
 app.set('view engine', 'handlebars');
@@ -64,10 +67,11 @@ app.use('/api/sessions', authRouter); // Maneja las rutas de autenticación (API
 // Rutas web
 app.use('/', viewsRouter); // Rutas para vistas en la web (handlebars)
 app.use('/cart', viewsRouter, cartRouter); // Rutas para vistas del carrito
+// Usa las rutas de carrito
+app.use(cartRouter);
 
-
-// Favicon
-app.use('/favicon.ico', (req, res) => res.status(204).end());
+// Ignorar las solicitudes de favicon
+app.get('/favicon.ico', (req, res) => res.status(204));
 
 // Ruta principal
 app.get('/', (req, res) => {

@@ -55,24 +55,40 @@ let revokedTokens = []; // Array para almacenar tokens revocados
 
 // Middleware para autenticar el token JWT
 export const authenticateJWT = (req, res, next) => {
-    passport.authenticate('jwt', { session: false }, (err, user, info) => {
-        if (err) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-        if (!user) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
+    const token = req.header('Authorization')?.split(' ')[1]; // Asume que el token viene en el header Authorization
 
-        // Verifica si el token está revocado
-        const token = req.headers['authorization']?.split(' ')[1];
-        if (revokedTokens.includes(token)) {
-            return res.status(403).json({ message: 'Token revocado' });
-        }
+    if (!token) {
+        return res.status(401).json({ message: 'Acceso denegado. No se proporcionó un token.' });
+    }
 
-        req.user = user; // Agrega el usuario a la solicitud
-        next(); // Llama a la siguiente función de middleware
-    })(req, res, next);
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verifica el token con tu clave secreta
+        req.user = decoded; // Agrega los datos del usuario al objeto req
+        next(); // Pasa al siguiente middleware/controlador
+    } catch (error) {
+        return res.status(403).json({ message: 'Token inválido.' });
+    }
 };
+
+// export const authenticateJWT = (req, res, next) => {
+//     passport.authenticate('jwt', { session: false }, (err, user, info) => {
+//         if (err) {
+//             return res.status(401).json({ message: 'Unauthorized' });
+//         }
+//         if (!user) {
+//             return res.status(401).json({ message: 'Unauthorized' });
+//         }
+
+//         // Verifica si el token está revocado
+//         const token = req.headers['authorization']?.split(' ')[1];
+//         if (revokedTokens.includes(token)) {
+//             return res.status(403).json({ message: 'Token revocado' });
+//         }
+
+//         req.user = user; // Agrega el usuario a la solicitud
+//         next(); // Llama a la siguiente función de middleware
+//     })(req, res, next);
+// };
 
 // Función para revocar el token
 export const revokeToken = (token) => {

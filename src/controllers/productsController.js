@@ -32,20 +32,17 @@
 // };
 
 import ProductManager from '../dao/db/product-manager-db.js';
-import CartManager from '../dao/db/cart-manager-db.js'; // Asegúrate de importar CartManager
-
-// Inicializa CartManager para acceder a las funcionalidades del carrito
-const cartManager = new CartManager();
+import CartManager from '../dao/db/cart-manager-db.js'; // Importa el CartManager para manejar el carrito del usuario
 
 export const getProducts = async (req, res) => {
     try {
         const products = await ProductManager.getProducts();
 
         // Obtener el carrito del usuario autenticado
-        const userCart = await cartManager.getUserCart(req.user.id); // Asegúrate de que req.user esté definido
-        const cartId = userCart ? userCart._id : null; // Asegúrate de que cartId esté definido
+        const userCart = await CartManager.getUserCart(req.user._id); // Aquí asegúrate de que req.user existe
+        const cartId = userCart ? userCart._id : null; // Asegúrate de pasar el cartId
 
-        // Renderiza la vista de productos con los productos y el cartId
+        // Renderiza la vista de productos con el cartId y los productos
         res.render('products', { productos: products, cartId });
     } catch (error) {
         console.error('Error fetching products:', error);

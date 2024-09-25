@@ -90,8 +90,10 @@ Las contribuciones son bienvenidas. Si encuentras algún problema o tienes algun
 ## Autor
 
 Sebastián Ludueña - [Linkedin](https://www.linkedin.com/in/csluduena/) - [GitHub](https://github.com/csluduena) - [Web](https://csluduena.com.ar)
+
 ```
 ExampleEntregaBackend2
+├─ .gitignore
 ├─ package-lock.json
 ├─ package.json
 ├─ readme.md

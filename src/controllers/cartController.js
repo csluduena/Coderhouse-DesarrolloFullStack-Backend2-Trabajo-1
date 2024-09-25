@@ -76,6 +76,19 @@ export const getCartById = async (req, res) => {
     }
 };
 
+// export const getCartById = async (req, res) => {
+//     const { cid } = req.params;
+//     try {
+//         const cart = await CartModel.findById(cid); // Cambia a CartModel
+//         if (!cart) {
+//             return res.status(404).json({ error: 'Carrito no encontrado' });
+//         }
+//         res.status(200).json(cart);
+//     } catch (error) {
+//         res.status(500).json({ error: 'Error del servidor' });
+//     }
+// };
+
 export const deleteCartById = async (req, res) => {
     const { cid } = req.params;
     try {
@@ -109,6 +122,30 @@ export const getUserCart = async (req, res) => {
     }
 };
 
+// Función para agregar un producto al carrito
+// export const addProductToCart = async (req, res) => {
+//     const userId = req.user._id; // Asegúrate de que el middleware esté configurado para agregar el usuario autenticado
+//     const { productId } = req.body;
+
+//     try {
+//         const cart = await CartManager.addProductToCart(userId, productId);
+//         res.json(cart);
+//     } catch (error) {
+//         res.status(500).json({ error: 'Error adding product to cart' });
+//     }
+// };
+
+// Función para obtener el carrito
+// export const getCart = async (req, res) => {
+//     const userId = req.user._id; // Obtén el ID del usuario desde el token
+//     try {
+//         const userCart = await CartManager.getCart(userId);
+//         res.render('carts', { cart: userCart.products }); // Renderiza la vista del carrito
+//     } catch (error) {
+//         console.error('Error fetching cart:', error);
+//         res.status(500).json({ message: 'Error fetching cart' });
+//     }
+// };
 
 // Función para eliminar un producto del carrito
 export const removeProductFromCart = async (req, res) => {

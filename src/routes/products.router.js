@@ -129,6 +129,11 @@ import { getProducts } from '../controllers/productsController.js';
 import { authenticateJWT } from '../middleware/auth.js';
 
 const router = express.Router();
+
+// Aplica el middleware para asegurarte de que el usuario esté autenticado antes de acceder a la vista de productos
+router.get('/', authenticateJWT, getProducts);
+
+
 const productManager = new ProductManager();
 
 router.get('/view', authenticateJWT, getProducts);

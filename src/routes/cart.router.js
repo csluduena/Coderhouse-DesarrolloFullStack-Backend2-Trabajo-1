@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { getCartById, addProductToCart } from '../controllers/cartController.js';  // Importa el controlador
 import CartManager from '../dao/db/cart-manager-db.js'; // Asegúrate de que este sea el camino correcto
 import ProductManager from '../dao/db/product-manager-db.js'; // Si necesitas manejar productos también
-
+import jwt from 'jsonwebtoken';
 const router = express.Router();
 const cartManager = new CartManager();
 const productManager = new ProductManager();

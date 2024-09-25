@@ -57,13 +57,14 @@ app.use(session({
 }));
 
 // Rutas API
-app.use('/api/carts', cartRouter); // Maneja las rutas de carrito (API)
+app.use('/api/cart', cartRouter); // Maneja las rutas de carrito (API)
 app.use('/api/products', productsRouter); // Maneja las rutas de productos (API)
 app.use('/api/sessions', authRouter); // Maneja las rutas de autenticación (API)
 
 // Rutas web
 app.use('/', viewsRouter); // Rutas para vistas en la web (handlebars)
-app.use('/cart', cartRouter); // Rutas para vistas del carrito
+app.use('/cart', viewsRouter, cartRouter); // Rutas para vistas del carrito
+
 
 // Favicon
 app.use('/favicon.ico', (req, res) => res.status(204).end());

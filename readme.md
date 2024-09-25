@@ -90,10 +90,8 @@ Las contribuciones son bienvenidas. Si encuentras algún problema o tienes algun
 ## Autor
 
 Sebastián Ludueña - [Linkedin](https://www.linkedin.com/in/csluduena/) - [GitHub](https://github.com/csluduena) - [Web](https://csluduena.com.ar)
-
 ```
 ExampleEntregaBackend2
-├─ .gitignore
 ├─ package-lock.json
 ├─ package.json
 ├─ readme.md
@@ -154,13 +152,14 @@ ExampleEntregaBackend2
    │  └─ js
    │     └─ index.js
    ├─ routes
+   │  ├─ auth.router.js
    │  ├─ cart.router.js
    │  ├─ products.router.js
    │  └─ views.router.js
    └─ views
       ├─ addProduct.handlebars
+      ├─ cart.handlebars
       ├─ cartDetails.handlebars
-      ├─ carts.handlebars
       ├─ error.handlebars
       ├─ home.handlebars
       ├─ layouts

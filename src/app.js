@@ -11,13 +11,20 @@ import passport from './config/passport.js';
 import cartRouter from './routes/cart.router.js';
 import authRouter from './routes/auth.router.js';
 import session from 'express-session'; // Importa express-session
+import path from 'path';
+import { fileURLToPath } from 'url'; // Esto es necesario para obtener __dirname en ESModules
 
+// Configuración para obtener __dirname en ESModules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Crear instancia de la app de Express
 const PORT = process.env.PORT || 8080;
 const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 
-// Configuración de handlebars
+// Configuración de Handlebars
 const hbs = exphbs.create({
     helpers: {
         multiply: (a, b) => a * b
@@ -29,10 +36,14 @@ const hbs = exphbs.create({
     }
 });
 
+app.engine('handlebars', hbs.engine); // Configurar el motor de Handlebars
+app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views')); // Ruta corregida
+
 // Middlewares globales
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('./src/public'));
+app.use(express.static(path.join(__dirname, 'public'))); // También arreglamos esta ruta
 
 // Configuración del middleware de sesión
 app.use(session({
@@ -46,27 +57,13 @@ app.use(session({
 }));
 
 // Rutas API
-app.use('/api/carts', cartRouter); // Maneja las rutas de carrito
-app.use('/api/products', productsRouter); // Maneja las rutas de productos
-app.use('/api/sessions', authRouter); // Maneja las rutas de autenticación (login/logout)
-app.use('/', viewsRouter); // Rutas para vistas
+app.use('/api/carts', cartRouter); // Maneja las rutas de carrito (API)
+app.use('/api/products', productsRouter); // Maneja las rutas de productos (API)
+app.use('/api/sessions', authRouter); // Maneja las rutas de autenticación (API)
 
-
-// // Rutas API
-// app.use('/api', cartRouter);
-// app.use('/api/products', productsRouter);
-// app.use('/api/sessions', viewsRouter);
-// app.use('/api/cart', cartRouter);
-// app.use('/api/auth', authRouter); 
-// app.use('/api/sessions', authRouter);// Ruta raíz para vistas
-// app.use('/', viewsRouter);
-// app.use('/api/sessions', authRouter); 
-
-
-app.engine('handlebars', hbs.engine);
-app.set('view engine', 'handlebars');
-app.set('views', './src/views');
-
+// Rutas web
+app.use('/', viewsRouter); // Rutas para vistas en la web (handlebars)
+app.use('/cart', cartRouter); // Rutas para vistas del carrito
 
 // Favicon
 app.use('/favicon.ico', (req, res) => res.status(204).end());
@@ -87,28 +84,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-
-
-app.post('/login', async (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) {
-            return next(err); // Pasar el error al siguiente middleware
-        }
-        if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-        req.logIn(user, { session: false }, async (err) => {
-            if (err) {
-                return next(err);
-            }
-            // Generar el token JWT aquí
-            const token = jwt.sign({ sub: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            return res.json({ token }); // Devolver el token al cliente
-        });
-    })(req, res, next);
-});
-
-// Configuración de Socket.io
+// Configuración de Socket.io para productos
 io.on('connection', (socket) => {
     console.log('New client connected');
 

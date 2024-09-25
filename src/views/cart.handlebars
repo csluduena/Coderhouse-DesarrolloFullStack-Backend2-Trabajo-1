@@ -21,7 +21,11 @@
 <p class="no-carts0">No products in your cart</p>
 {{/if}} --}}
 
-<h1>Detalles del Carrito</h1>
+
+
+
+
+{{!-- <h1>Detalles del Carrito</h1>
 
 {{#if products.length}}
 <table>
@@ -52,4 +56,29 @@
 <h2>Total: {{totalPrice}}</h2>
 {{else}}
 <p>No hay productos en el carrito.</p>
+{{/if}} --}}
+
+
+<h1>Detalles del Carrito</h1>
+
+{{#if cart.products.length}}
+    <ul>
+        {{#each cart.products}}
+            <li>
+                <h2>{{this.product.title}}</h2>
+                <p><strong>Descripción:</strong> {{this.product.description}}</p>
+                <p><strong>Precio:</strong> ${{this.product.price}}</p>
+                <p><strong>Código:</strong> {{this.product.code}}</p>
+                <p><strong>Categoría:</strong> {{this.product.category}}</p>
+                <p><strong>Stock:</strong> {{this.product.stock}}</p>
+                <img src="{{this.product.img}}" alt="{{this.product.title}}" style="width: 150px;">
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p>El carrito está vacío.</p>
 {{/if}}
+<p>Ver los detalles del carrito:</p>
+<a href="/cart/{{cartId}}">Ver detalles</a>
+
+<a href="/">Volver a la tienda</a>

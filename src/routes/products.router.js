@@ -125,9 +125,16 @@
 
 import express from 'express';
 import ProductManager from '../dao/db/product-manager-db.js';
+import { getProducts } from '../controllers/productsController.js';
+import { authenticateJWT } from '../middleware/auth.js';
 
 const router = express.Router();
 const productManager = new ProductManager();
+
+router.get('/view', authenticateJWT, getProducts);
+
+// Ruta para renderizar la página de productos
+router.get('/view', getProducts); // Ruta que renderiza la vista de productos
 
 router.get('/', async (req, res) => {
     try {

@@ -40,6 +40,32 @@ export const addProductToCart = async (req, res) => {
     }
 };
 
+export const getCartById = async (req, res) => {
+    const { cid } = req.params;
+    try {
+        const cart = await CartModel.findById(cid); // Cambia a CartModel
+        if (!cart) {
+            return res.status(404).json({ error: 'Carrito no encontrado' });
+        }
+        res.status(200).json(cart);
+    } catch (error) {
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+};
+
+export const deleteCartById = async (req, res) => {
+    const { cid } = req.params;
+    try {
+        const cart = await CartModel.findByIdAndDelete(cid); // Cambia a CartModel
+        if (!cart) {
+            return res.status(404).json({ error: 'Carrito no encontrado' });
+        }
+        res.status(200).json({ message: 'Carrito eliminado con éxito' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al eliminar el carrito' });
+    }
+};
+
 export const getUserCart = async (req, res) => {
     try {
         const user = req.user; // Obtén el usuario autenticado
@@ -60,7 +86,7 @@ export const getUserCart = async (req, res) => {
     }
 };
 
-// // Función para agregar un producto al carrito
+// Función para agregar un producto al carrito
 // export const addProductToCart = async (req, res) => {
 //     const userId = req.user._id; // Asegúrate de que el middleware esté configurado para agregar el usuario autenticado
 //     const { productId } = req.body;
@@ -117,6 +143,8 @@ export const getCartView = async (req, res) => {
         res.status(500).json({ message: "Error al mostrar el carrito" });
     }
 };
+
+
 
 
 export default CartManager;

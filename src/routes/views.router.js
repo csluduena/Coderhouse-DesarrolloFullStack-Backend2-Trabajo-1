@@ -439,7 +439,7 @@
 
 import express from "express";
 import ProductManager from "../dao/db/product-manager-db.js";
-import { login, register } from '../controllers/authController.js';
+import { login, register, logout } from '../controllers/authController.js';
 import UserModel from '../dao/models/user.model.js';
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
@@ -459,6 +459,7 @@ router.get('/login', (req, res) => {
 router.post('/login', login);
 router.post('/api/sessions/register', register);
 router.post('/register', register);
+router.post('/api/sessions/logout', logout);
 
 router.get('/register', (req, res) => {
     res.render('register');

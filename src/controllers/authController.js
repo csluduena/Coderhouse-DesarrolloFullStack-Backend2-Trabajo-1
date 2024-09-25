@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../dao/models/user.model.js';
 import CartModel from '../dao/models/cart.model.js'; // Importa el modelo de carrito
 import bcrypt from 'bcrypt';
+import { revokeToken } from '../middleware/auth.js';
+
 
 // Lógica de login (de código A)
 export const login = async (req, res) => {
@@ -13,7 +15,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
-        const isValidPassword = bcrypt.compare(password, user.password); // Asegúrate de usar await aquí
+        const isValidPassword = bcrypt.compare(password, user.password); 
         if (!isValidPassword) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
@@ -71,7 +73,34 @@ export const register = async (req, res) => {
     }
 };
 
-// Lógica de logout 
+// // Cierra la sesión del usuario y destruye la sesión activa
+// export const logout = (req, res) => {
+//     try {
+//         req.session.destroy((err) => {
+//             if (err) {
+//                 return res.status(500).json({ error: 'Error al cerrar la sesión' });
+//             }
+//             res.status(200).json({ message: 'Sesión cerrada exitosamente' });
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: 'Error en el servidor' });
+//     }
+// };
+
 export const logout = (req, res) => {
-    res.status(200).json({ message: 'Logout successful' });
+    const token = req.headers['authorization']?.split(' ')[1]; // Extrae el token del header
+
+    if (token) {
+        revokeToken(token); // Usa la función revokeToken
+    }
+
+    res.status(200).json({ message: 'Sesión cerrada exitosamente' });
+};
+
+export const getCurrentSession = (req, res) => {
+    if (req.user) { // Asegúrate de que la información del usuario está disponible
+        return res.status(200).json(req.user); // Devuelve la información del usuario
+    } else {
+        return res.status(401).json({ error: 'No estás autenticado' });
+    }
 };

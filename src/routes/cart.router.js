@@ -29,6 +29,28 @@ router.get('/cart', async (req, res) => {
         res.status(500).send('Error al obtener el carrito');
     }
 });
+
+// Ruta para agregar un producto al carrito
+router.post('/cart/:cid/products/:pid', async (req, res) => {
+    const { cid, pid } = req.params;
+
+    try {
+        // Asegúrate de pasar la cantidad si está en el cuerpo de la solicitud
+        const quantity = req.body.quantity || 1; // Si no se proporciona, toma 1 por defecto
+        const cart = await cartManager.addProductToCart(cid, pid, quantity); // Pasa la cantidad
+
+        // Enviar respuesta
+        res.status(200).json({ message: 'Producto agregado al carrito', cart });
+    } catch (error) {
+        console.error('Error al agregar producto al carrito:', error);
+        res.status(500).json({ error: 'Error al agregar producto al carrito' });
+    }
+});
+
+export default router;
+
+
+
 // // Ruta para agregar un producto al carrito
 // router.post('/cart/:cid/products/:pid', async (req, res) => {
 //     console.log('Request body:', req.body); // Añadir este log para ver el cuerpo de la solicitud
@@ -48,29 +70,11 @@ router.get('/cart', async (req, res) => {
 // });
 
 
-// Ruta para agregar un producto al carrito
-router.post('/cart/:cid/products/:pid', async (req, res) => {
-    const { cid, pid } = req.params;
-
-    try {
-        // Asegúrate de pasar la cantidad si está en el cuerpo de la solicitud
-        const quantity = req.body.quantity || 1; // Si no se proporciona, toma 1 por defecto
-        const cart = await cartManager.addProductToCart(cid, pid, quantity); // Pasa la cantidad
-
-        // Enviar respuesta
-        res.status(200).json({ message: 'Producto agregado al carrito', cart });
-    } catch (error) {
-        console.error('Error al agregar producto al carrito:', error);
-        res.status(500).json({ error: 'Error al agregar producto al carrito' });
-    }
-});
-
 
 
 // Puedes eliminar esta línea, ya que ya no necesitas la antigua ruta
 // router.post('/:cid/products/:pid', addProductToCart);
 
-export default router;
 
 
 

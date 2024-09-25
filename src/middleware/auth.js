@@ -1,17 +1,51 @@
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
+
+let revokedTokens = []; // Array para almacenar tokens revocados
 
 export const authenticateJWT = (req, res, next) => {
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
-        if (err) {
+        if (err || !user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        if (!user) {
-            return res.status(401).json({ message: 'Unauthorized' });
+
+        // Verifica si el token está revocado
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (revokedTokens.includes(token)) {
+            return res.status(403).json({ message: 'Token revocado' });
         }
-        req.user = user; // Agregamos el usuario a la solicitud para que esté disponible en la siguiente función
-        next(); // Llamamos a la siguiente función de middleware
+
+        req.user = user; // Agrega el usuario a la solicitud
+        next(); // Llama a la siguiente función de middleware
     })(req, res, next);
 };
+
+// Función para revocar el token
+export const revokeToken = (token) => {
+    revokedTokens.push(token);
+};
+
+const verifyToken = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ error: 'No se proporciona token' });
+    }
+
+    if (revokedTokens.includes(token)) {
+        return res.status(403).json({ error: 'Debe iniciar Sesión de nuevo' }); // Token revocado
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Token inválido' });
+        }
+        req.user = user; 
+        next();
+    });
+};
+
+export default verifyToken;
 
 // import jwt from 'jsonwebtoken';
 

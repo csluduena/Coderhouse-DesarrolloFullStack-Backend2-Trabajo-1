@@ -1,4 +1,4 @@
-<div class="product-details"></div>
+<div class="product-details">
     <h1 class="tituloLog">{{product.name}}</h1>
     <div class="flexSingleG">
         <div class="product-content">
@@ -31,14 +31,14 @@
                 body: JSON.stringify({ productId, quantity: 1 }),
             });
             if (response.ok) {
-                alert('Producto añadido al carrito');
+                await rockAlert.success('¡Producto añadido al carrito! ¡Increíble Elección!');
                 checkAuth(); // Actualiza el contador del carrito
             } else {
                 throw new Error('Error al añadir al carrito');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Error al añadir al carrito');
+            await rockAlert.error('Error al añadir al carrito');
         }
     });
 </script>

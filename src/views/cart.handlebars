@@ -87,25 +87,29 @@ async function updateQuantity(itemId, change) {
         }
     } catch (error) {
         console.error('Error:', error);
-        alert(error.message);
+        await rockAlert.error(error.message);
     }
 }
 
 async function removeItem(itemId) {
-    try {
-        const response = await fetch(`/api/carts/remove/${itemId}`, {
-            method: 'DELETE'
-        });
-        if (response.ok) {
-            const itemElement = document.querySelector(`.cart-item[data-id="${itemId}"]`);
-            itemElement.remove();
-            updateCartTotal();
-        } else {
-            throw new Error('Error al eliminar el item');
+    const result = await rockAlert.confirm('¿Estás seguro de que quieres eliminar este producto del carrito?');
+    if (result.isConfirmed) {
+        try {
+            const response = await fetch(`/api/carts/remove/${itemId}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                const itemElement = document.querySelector(`.cart-item[data-id="${itemId}"]`);
+                itemElement.remove();
+                updateCartTotal();
+                await rockAlert.success('¡Producto eliminado del carrito!');
+            } else {
+                throw new Error('Error al eliminar el item');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            await rockAlert.error('Error al eliminar el item');
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al eliminar el item');
     }
 }
 

@@ -51,7 +51,7 @@
                         body: JSON.stringify({ productId, quantity: 1 }),
                     });
                     if (response.ok) {
-                        alert('Producto añadido al carrito');
+                        await rockAlert.success('¡Producto añadido al carrito! ¡Increíble Elección!');
                         if (typeof checkAuth === 'function') {
                             checkAuth(); // Actualiza el contador del carrito si la función existe
                         }
@@ -61,7 +61,7 @@
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert(error.message);
+                    await rockAlert.error(error.message || 'Error al añadir al carrito');
                 }
             });
         });

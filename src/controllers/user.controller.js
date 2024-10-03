@@ -25,12 +25,26 @@ export const register = async (req, res) => {
         await user.save();
 
         const token = jwt.sign(
-            { userId: user._id, first_name: user.first_name, last_name: user.last_name, email: user.email, age: user.age, role: user.role, cart: user.cart },
+            { 
+                userId: user._id, 
+                first_name: user.first_name, 
+                last_name: user.last_name, 
+                email: user.email, 
+                age: user.age, 
+                role: user.role, 
+                cart: user.cart 
+            },
             jwtSecret,
             { expiresIn: '1h' }
         );
 
-        // Constante adicional con información del usuario que quieres devolver
+        // Definir tiempo de expiración de la cookie usando multiplicaciones sucesivas
+        const oneHour = 1000 * 60 * 60; // 1 hora en milisegundos
+
+        // Guardar el token en una cookie con la duración establecida
+        res.cookie('token', token, { httpOnly: true, maxAge: oneHour });
+
+        // Información adicional del usuario que quieres devolver
         const userInfo = {
             userId: user._id,
             first_name: user.first_name,
@@ -41,13 +55,10 @@ export const register = async (req, res) => {
             cart: user.cart
         };
 
-        // Guardar el token en una cookie
-        res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
-
         // Enviar respuesta con el mensaje, información del usuario, token, y URL de redirección
         res.status(201).json({
             message: 'Usuario registrado exitosamente',
-            user: userInfo,  // Información adicional del usuario
+            user: userInfo,
             token: token,    // Enviar el token también si es necesario
             redirectUrl: '/api/sessions/current'
         });
@@ -73,14 +84,25 @@ export const login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user._id, first_name: user.first_name, last_name: user.last_name, email: user.email, age: user.age, role: user.role, cart: user.cart },
+            { 
+                userId: user._id, 
+                first_name: user.first_name, 
+                last_name: user.last_name, 
+                email: user.email, 
+                age: user.age, 
+                role: user.role, 
+                cart: user.cart 
+            },
             jwtSecret,
             { expiresIn: '1h' }
         );
 
-        res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+        // Definir tiempo de expiración de la cookie usando multiplicaciones sucesivas
+        const oneHour = 1000 * 60 * 60; // 1 hora en milisegundos
 
-        // Constante adicional con información del usuario que quieres devolver
+        // Guardar el token en una cookie con la duración establecida
+        res.cookie('token', token, { httpOnly: true, maxAge: oneHour });
+
         const userInfo = {
             userId: user._id,
             first_name: user.first_name,
@@ -90,10 +112,11 @@ export const login = async (req, res) => {
             role: user.role,
             cart: user.cart
         };
-        res.status(201).json({
-            message: 'Usuario registrado exitosamente',
-            user: userInfo,  // Información adicional del usuario
-            token: token,    // Enviar el token también si es necesario
+
+        res.status(200).json({
+            message: 'Inicio de sesión exitoso',
+            user: userInfo,
+            token: token,
             redirectUrl: '/api/sessions/current'
         });
     } catch (error) {

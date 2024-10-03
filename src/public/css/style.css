@@ -14,6 +14,25 @@
     padding: 0;
 }
 
+a {
+    text-decoration: none;
+    /* Quita el subrayado */
+    color: inherit;
+    /* Mantiene el color del texto del entorno, elimina el color violeta por defecto */
+}
+
+a:visited {
+    color: inherit;
+    /* Evita que los enlaces visitados se pongan en violeta */
+}
+
+a:hover {
+    color: inherit;
+    /* Mantiene el color al pasar el cursor sobre el enlace */
+    text-decoration: none;
+    /* Asegura que no aparezca subrayado al pasar el cursor */
+}
+
 /*
 body {
     font-family: 'Roboto', sans-serif;
@@ -68,7 +87,8 @@ footer {
 */
 
 /* Ajustes generales */
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -122,8 +142,12 @@ footer {
 }
 
 /* Asegurarse de que el contenido sea legible sobre el fondo */
-.home-container, .product-grid, .auth-container, .rock-session-container {
-    background-color: rgba(18, 18, 18, 0); /* Fondo semi-transparente */
+.home-container,
+.product-grid,
+.auth-container,
+.rock-session-container {
+    background-color: rgba(18, 18, 18, 0);
+    /* Fondo semi-transparente */
     padding: 2rem;
     border-radius: 10px;
     margin-bottom: 2rem;
@@ -145,7 +169,8 @@ footer {
 /* Mantener los estilos existentes para otros elementos... */
 
 /* Ajustes adicionales para mejorar la legibilidad */
-.product-card, .guitar-type-card {
+.product-card,
+.guitar-type-card {
     background: rgba(26, 26, 26, 0.9);
 }
 
@@ -154,7 +179,8 @@ footer {
 }
 
 /* Asegurarse de que los botones y enlaces sean visibles */
-.btn, nav ul li a {
+.btn,
+nav ul li a {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
@@ -416,6 +442,11 @@ nav ul li a:hover {
     display: flex;
     align-items: center;
     flex-direction: column;
+    background-color: #00000061;
+    margin-left: 36%;
+    margin-right: 36%;
+    margin-top: 5%;
+    border: 2px dotted #ff000042;
 }
 
 .marginBot1rem {
@@ -506,6 +537,10 @@ nav ul li a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #000000b3;
+    margin-left: 16%;
+    margin-right: 16%;
+    border: 2px solid red;
 }
 
 .rock-title {
@@ -641,4 +676,43 @@ nav ul li a:hover {
 .pagination {
     text-align: center;
     margin-top: 2%;
+}
+
+.noAcc {
+    color: rgb(255, 251, 251);
+    text-shadow: -1px 1px 3px #ff0000;
+}
+
+.noAcc2 {
+    color: #ff5353;
+    text-shadow: -1px 1px 3px #ff0000;
+}
+
+#register-form {
+    font-size: 13px;
+    gap: 8px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #000000b3;
+    margin-left: 30%;
+    margin-right: 30%;
+    border: 2px solid #ff000042;
+    margin-top: 5%;
 }

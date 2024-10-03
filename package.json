@@ -1,34 +1,37 @@
 {
-    "name": "guitarstore-v4",
+    "name": "guitarstore4.1",
+    "version": "4.1.0",
     "type": "module",
-    "version": "1.0.0",
-    "description": "Tercer entrega del proyecto 'Guitar Store', para el curso de 'Backend 2' en la academia CoderHouse.",
+    "description": "Primer entrega del proyecto 'Guitar Store', para el curso de 'Backend 2' en la academia CoderHouse.",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon src/app.js"
     },
-    "keywords": [],
-    "author": "Carlos Sebastian Ludueña",
+    "author": "Sebastian Ludueña | CSLuduena®",
     "license": "ISC",
     "dependencies": {
-        "axios": "^1.7.5",
+        "axios": "^1.7.7",
         "bcrypt": "^5.1.1",
+        "connect-mongo": "^5.1.0",
         "cookie-parser": "^1.4.6",
         "dotenv": "^16.4.5",
-        "express": "^4.18.2",
+        "express": "^4.19.2",
         "express-handlebars": "^7.1.3",
         "express-session": "^1.18.0",
-        "express-validator": "^7.2.0",
         "jsonwebtoken": "^9.0.2",
-        "mongoose": "^8.1.1",
-        "mongoose-paginate-v2": "^1.8.2",
+        "mongodb": "^6.8.0",
+        "mongoose": "^8.5.4",
+        "mongoose-paginate-v2": "^1.8.5",
+        "nodemailer": "^6.9.15",
         "passport": "^0.7.0",
+        "passport-github": "^1.1.0",
+        "passport-github2": "^0.1.12",
         "passport-jwt": "^4.0.1",
         "passport-local": "^1.0.0",
-        "socket.io": "^4.7.4"
+        "socket.io": "^4.7.5"
     },
     "devDependencies": {
-        "nodemon": "^3.0.2"
+        "nodemon": "^3.1.4"
     }
 }

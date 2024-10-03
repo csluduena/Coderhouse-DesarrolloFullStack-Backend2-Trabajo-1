@@ -1,226 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/indexHLB.css">
+    <title>Guitar Store</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </head>
-
 <body>
-    <header class="main-header">
-        <nav class="nav-bar">
-            <div class="nav-left">
-                <a href="/login" class="login-link">Login</a>
-                <span class="separator" id="ocultSep">|</span>
-                <a href="/register" class="register-link">Are you new? Register here</a>
-                <span class="separator" id="ocultSep2">|</span>
-
-                <div class="button-container01">
-                    <!-- Botón 1 -->
-                    <div class="button-wrapper01">
-                        <button class="main-button01 hoverButton">Productos</button>
-                        <ul class="options01">
-                            <li><button onclick="window.open('api/products')" class="hoverButton">Code Version</button>
-                            </li>
-                            <li><button onclick="window.open('/products')" class="hoverButton">Live Version</button>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Botón 2 -->
-                    <div class="button-wrapper01">
-                        <button class="main-button01 hoverButton">Carrito</button>
-                        <ul class="options01">
-                            <li><button onclick="window.open('api/carts', '_blank')" class="hoverButton">Code
-                                    Version</button></li>
-                            <li><button onclick="window.open('/cart', '_blank')" class="hoverButton">Live
-                                    Version</button></li>
-                        </ul>
-                    </div>
-
-                    <span class="separator2" id="ocultSep3">|</span>
-                    <button class="main-button01 hoverButton" id="logoutButton" onclick="logout()">Logout</button>
-                </div>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="/img/banner.png" alt="Guitar Store Logo">
             </div>
-            <div class="nav-right">
-                <a href="/cart" class="cart-icon"></a>
-            </div>
-        </nav>
+            <nav>
+                <ul>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/products">Productos</a></li>
+                    <li id="cartLink" style="display: none;">
+                        <a href="/cart">Carrito <span id="cartCount">0</span></a>
+                    </li>
+                    <li id="loginLink"><a href="/login">Iniciar sesión</a></li>
+                    <li id="registerLink"><a href="/register">Registrarse</a></li>
+                    <li id="profileLink" style="display: none;"><a href="/profile">Perfil</a></li>
+                    <li id="logoutLink" style="display: none;"><a href="#" onclick="logout()">Cerrar sesión</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
+    <main>
+        {{{body}}}
+    </main>
 
-    {{{body}}}
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-    <a href="/" id="backToHomeBtn" class="pointer songoro hover2 botoncito">Volver al Inicio</a>
-
-    <!-- Modal de Confirmación de Cierre de Sesión -->
-    <div id="logoutModalLogStyle" class="modalLogStyle">
-        <div class="cardLogStyle">
-            <div class="card-bodyLogStyle">
-                <span class="closeLogStyle" onclick="closeLogoutModal()">&times;</span>
-                <h2 class="card-titleLogStyle">Logout</h2>
-                <p class="LttrLogStyle">¿Estás seguro de que quieres cerrar sesión?</p>
-                <div class="btnFlx">
-                    <button id="confirmLogoutLogStyle" class="submitLogStyle">OK</button>
-                    <button id="cancelLogoutLogStyle" onclick="closeLogoutModal()"
-                        class="submitLogStyle">Cancel</button>
-                </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/img/banner.png" alt="Guitar Store Logo">
+            </div>
+            <div class="footer-links">
+                <a href="/#">Sobre nosotros</a>
+                <a href="/#">Contacto</a>
+                <a href="/#">Términos y condiciones</a>
+            </div>
+            <div class="social-media">
+                <a href="#" class="social-icon">Facebook</a>
+                <a href="#" class="social-icon">Instagram</a>
+                <a href="#" class="social-icon">Twitter</a>
             </div>
         </div>
-    </div>
-
-
-    <footer class="site-footer">
-        <div class="footer-content">
-            <p>&copy; 2024 Sebastián Ludueña</p>
-            <div class="footer-links">
-                <a href="https://www.linkedin.com/in/csluduena" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                <a href="https://github.com/csluduena" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://csluduena.com.ar" target="_blank" rel="noopener noreferrer">Web</a>
-            </div>
+        <div class="copyright">
+            © 2024 Guitar Store. Todos los derechos reservados.
         </div>
     </footer>
 
     <script>
-        // Código JavaScript para manejar los botones
-        const buttons = document.querySelectorAll('.button-wrapper01');
-        buttons.forEach(buttonWrapper => {
-            const mainButton = buttonWrapper.querySelector('.main-button01');
-            const options = buttonWrapper.querySelector('.options01');
-
-            mainButton.addEventListener('click', () => {
-                buttons.forEach(btn => {
-                    if (btn !== buttonWrapper) {
-                        btn.classList.remove('active');
-                    }
-                });
-                buttonWrapper.classList.toggle('active');
-            });
-
-            buttonWrapper.addEventListener('mouseenter', () => {
-                buttonWrapper.classList.add('active');
-            });
-
-            buttonWrapper.addEventListener('mouseleave', () => {
-                buttonWrapper.classList.remove('active');
-            });
-        });
-    </script>
-
-    <script>
-        // Función para comprobar si hay un usuario logueado en la sesión local
-        function checkUserSession() {
-            const token = localStorage.getItem('token'); // Comprobar si hay un token
-            const userName = localStorage.getItem('first_name'); // Obtener el nombre del usuario
-
-            const loginLink = document.querySelector('.login-link');
-            const registerLink = document.querySelector('.register-link');
-            const logoutButton = document.querySelector('.button-container01 .main-button01[onclick="logout()"]');
-            const ocultarSeparador = document.getElementById('ocultSep');
-            const ocultarSeparador2 = document.getElementById('ocultSep2');
-            const ocultarSeparador3 = document.getElementById('ocultSep3');
-            const userNameOnScreen = document.getElementById('loggedName');
-
-            if (token) {
-                // Si hay un token, se considera que el usuario está logueado
-                loginLink.style.display = 'none';
-                registerLink.style.display = 'none';
-                logoutButton.style.display = 'inline-block'; // Mostrar botón de logout
-                ocultarSeparador.style.display = 'none';
-                ocultarSeparador2.style.display = 'none';
-                ocultarSeparador3.style.display = 'inline-block';
-
-            } else {
-                // Si no hay token, el usuario no está logueado
-                loginLink.style.display = 'inline-block';
-                registerLink.style.display = 'inline-block';
-                logoutButton.style.display = 'none'; // Ocultar botón de logout
-                ocultarSeparador.style.display = 'inline-block';
-                ocultarSeparador2.style.display = 'inline-block';
-                ocultarSeparador3.style.display = 'none';
+    function checkAuth() {
+        fetch('/api/sessions/user', {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
             }
-        }
-
-        // Función para manejar los botones
-        function setupButtonHandlers() {
-            const buttons = document.querySelectorAll('.button-wrapper01');
-            buttons.forEach(buttonWrapper => {
-                const mainButton = buttonWrapper.querySelector('.main-button01');
-                const options = buttonWrapper.querySelector('.options01');
-
-                mainButton.addEventListener('click', () => {
-                    buttons.forEach(btn => {
-                        if (btn !== buttonWrapper) {
-                            btn.classList.remove('active');
-                        }
-                    });
-                    buttonWrapper.classList.toggle('active');
-                });
-
-                buttonWrapper.addEventListener('mouseenter', () => {
-                    buttonWrapper.classList.add('active');
-                });
-
-                buttonWrapper.addEventListener('mouseleave', () => {
-                    buttonWrapper.classList.remove('active');
-                });
-            });
-        }
-
-        // Llama a las funciones para verificar el estado de la sesión y configurar los botones al cargar la página
-        window.onload = () => {
-            checkUserSession();
-            setupButtonHandlers();
-        };
-
-        function logout() {
-            localStorage.removeItem('token'); // Eliminar el token de la sesión local
-            window.location.href = '/'; // Redirigir a la ruta de logout
-        }
-    </script>
-
-    <script>
-        document.getElementById('logoutButton').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            alert('Has cerrado sesión.');
-            window.location.href = '/login'; // Redirige a la página de login
+            throw new Error('Unauthenticated');
+        })
+        .then(data => {
+            if (data.user) {
+                document.getElementById('cartLink').style.display = 'inline';
+                document.getElementById('profileLink').style.display = 'inline';
+                document.getElementById('logoutLink').style.display = 'inline';
+                document.getElementById('loginLink').style.display = 'none';
+                document.getElementById('registerLink').style.display = 'none';
+                if (data.user.cart) {
+                    updateCartCount(data.user.cart);
+                }
+            } else {
+                throw new Error('Unauthenticated');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('cartLink').style.display = 'none';
+            document.getElementById('profileLink').style.display = 'none';
+            document.getElementById('logoutLink').style.display = 'none';
+            document.getElementById('loginLink').style.display = 'inline';
+            document.getElementById('registerLink').style.display = 'inline';
         });
+    }
+
+    function updateCartCount(cartId) {
+        fetch(`/api/carts/${cartId}`)
+            .then(response => response.json())
+            .then(data => {
+                const cartCount = data.items ? data.items.reduce((total, item) => total + item.quantity, 0) : 0;
+                document.getElementById('cartCount').textContent = cartCount;
+            })
+            .catch(error => {
+                console.error('Error updating cart count:', error);
+                document.getElementById('cartCount').textContent = '0';
+            });
+    }
+
+    function logout() {
+        fetch('/api/sessions/logout', { method: 'POST' })
+            .then(response => response.json())
+            .then(() => {
+                window.location.href = '/login';
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', checkAuth);
     </script>
-
-    <script>
-        // Función para abrir el modal de logout
-        function openLogoutModal() {
-            const modal = document.getElementById('logoutModalLogStyle');
-            modal.style.display = 'block';
-        }
-
-        // Función para cerrar el modal
-        function closeLogoutModal() {
-            const modal = document.getElementById('logoutModalLogStyle');
-            modal.style.display = 'none';
-        }
-
-        // Maneja el evento del botón de logout
-        function logout() {
-            openLogoutModal(); // Abre el modal de confirmación
-        }
-
-        // Maneja la confirmación del cierre de sesión
-        document.getElementById('confirmLogoutLogStyle').onclick = function () {
-            localStorage.removeItem('token'); // Elimina el token de la sesión local
-            window.location.href = '/'; // Redirige a la página principal
-        };
-    </script>
-
-
 </body>
-
 </html>

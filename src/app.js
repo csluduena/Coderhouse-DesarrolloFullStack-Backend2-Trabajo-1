@@ -1,126 +1,100 @@
-import 'dotenv/config';
-import express from 'express';
-import exphbs from 'express-handlebars';
-import productsRouter from './routes/products.router.js';
-import viewsRouter from './routes/views.router.js';
-import http from 'http';
-import { Server } from 'socket.io';
-import './database.js';
-import ProductManager from './dao/db/product-manager-db.js';
-import passport from './config/passport.js';
-//import cartRouter from './routes/cart.router.js';
-import authRouter from './routes/auth.router.js';
-import session from 'express-session'; // Importa express-session
+import express from "express";
+import passport from "passport";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+import initializePassport from "./config/passport.config.js";
+import { engine } from "express-handlebars";
+import { Server } from "socket.io";
+import config from './config/config.js';
+import productsRouter from "./routes/products.routes.js";
+import cartRouter from "./routes/cart.routes.js";
+import userRouter from "./routes/user.routes.js";
+import orderRouter from "./routes/order.routes.js";
+import viewsRouter from "./routes/views.routes.js";
+import sessionRouter from "./routes/session.routes.js";
+import { errorHandler, notFoundHandler } from "./middlewares/error.middleware.js";
+import ProductManager from './dao/db/productManagerDb.js';
+import { fileURLToPath } from 'url'; 
 import path from 'path';
-import { fileURLToPath } from 'url'; // Esto es necesario para obtener __dirname en ESModules
-import { cartRouter, router } from './routes/cart.router.js';
+import "./db.js";
 
-// Configuración para obtener __dirname en ESModules
+const app = express();
+const productManager = new ProductManager();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Crear instancia de la app de Express
-const PORT = process.env.PORT || 8080;
-const app = express();
-const httpServer = http.createServer(app);
-const io = new Server(httpServer);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("./src/public"));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 
-// Configuración de Handlebars
-const hbs = exphbs.create({
-    helpers: {
-        multiply: (a, b) => a * b
-    },
-    defaultLayout: 'main',
+// Configuración de la sesión
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: config.mongodbUri,
+        ttl: 60 * 60 // 1 hora
+    }),
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: false
+}));
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.engine('handlebars', engine({
     runtimeOptions: {
         allowProtoPropertiesByDefault: true,
         allowProtoMethodsByDefault: true,
-    }
-});
-
-
-
-app.engine('handlebars', hbs.engine); // Configurar el motor de Handlebars
-app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, 'views')); // Ruta corregida
-
-// Middlewares globales
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // También arreglamos esta ruta
-
-// Configuración del middleware de sesión
-app.use(session({
-    secret: 'tu_clave_secreta', // Cambia esto a una clave secreta segura
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        secure: false, // Cambia a true si usas HTTPS
-        maxAge: 1000 * 60 * 60 * 24 // 1 día de duración de la cookie
+    },
+    helpers: {
+        formatNumber: (number, decimals = 2) => {
+            if (number === null || number === undefined || isNaN(number)) {
+                return 'N/A';
+            }
+            return Number(number).toFixed(decimals);
+        },
+        eq: (v1, v2) => v1 === v2,
+        or: (v1, v2) => v1 || v2,
+        and: (v1, v2) => v1 && v2,
+        not: v => !v,
+        ternary: (cond, v1, v2) => cond ? v1 : v2,
     }
 }));
+app.set('view engine', 'handlebars');
+app.set('views', 'src/views');
 
-// Rutas API
-app.use('/api/cart', cartRouter); // Maneja las rutas de carrito (API)
-app.use('/api/products', productsRouter); // Maneja las rutas de productos (API)
-app.use('/api/sessions', authRouter); // Maneja las rutas de autenticación (API)
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
-// Rutas web
-app.use('/', viewsRouter); // Rutas para vistas en la web (handlebars)
-app.use('/cart', viewsRouter, cartRouter); // Rutas para vistas del carrito
-// Usa las rutas de carrito
-app.use(cartRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartRouter);
+app.use("/api/users", userRouter);
+app.use("/api/orders", orderRouter);
+app.use('/api/sessions', sessionRouter);
+app.use('/', viewsRouter);
 
-// Ignorar las solicitudes de favicon
-app.get('/favicon.ico', (req, res) => res.status(204));
+app.use(notFoundHandler);
+app.use(errorHandler);
 
-// Ruta principal
-app.get('/', (req, res) => {
-    res.render('home');
+const httpServer = app.listen(config.port, () => {
+    console.log(`Server running on port http://localhost:${config.port}`);
 });
 
-// Manejo de rutas no encontradas (404)
-app.get('*', (req, res) => {
-    res.status(404).send('Route not found');
-});
+const io = new Server(httpServer);
 
-// Manejo de errores global
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-});
+io.on("connection", async (socket) => {
+    console.log("Nuevo cliente conectado");
 
-// Configuración de Socket.io para productos
-io.on('connection', (socket) => {
-    console.log('New client connected');
+    const initialProducts = await productManager.getProducts(1, 15);
+    socket.emit('products', initialProducts);
 
-    socket.on('sortProducts', async (data) => {
-        const { sort } = data;
-        try {
-            const products = await ProductManager.getProducts();
-            const sortedProducts = products.sort((a, b) => {
-                if (sort === 'asc') {
-                    return a.price - b.price;
-                } else if (sort === 'desc') {
-                    return b.price - a.price;
-                } else {
-                    return 0;
-                }
-            });
-            socket.emit('updateProducts', sortedProducts);
-        } catch (error) {
-            console.error('Error sorting products:', error);
-            socket.emit('updateProducts', { error: 'Error al obtener productos' });
-        }
+    socket.on('requestPage', async ({ page, limit, sort }) => {
+        const products = await productManager.getProducts(page, limit, sort);
+        socket.emit('products', products);
     });
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
-});
-
-// Inicio del servidor
-httpServer.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
 
 export default app;

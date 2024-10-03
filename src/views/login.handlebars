@@ -1,142 +1,41 @@
-<link rel="stylesheet" href="/css/login.css">
-
-<div class="containerLo"></div>
-<div class="row justify-content-centerLo">
-    <div class="col-md-6Lo">
-        <div class="cardLo">
-            <div class="card-bodyLo2">
-                <h2 class="card-titleLo2">Iniciar sesión</h2>
-                <form action="/login" method="post" class="formLo2" id="loginForm">
-                    <div class="sepInputs">
-                        <label for="email" class="labelLo2">Email:</label>
-                        <input type="email" id="email" name="email" required="" class="inputLo2">
-
-                        <label for="password" class="labelLo2">Password:</label>
-                        <input type="password" id="password" name="password" required="" class="inputLo2">
-                    </div>
-                    <input type="submit" value="Login" class="submitLo2">
-                </form>
-                <div id="loginMessage" class="messageLo2" style="display: none;"></div>
-            </div>
-        </div>
+<div class="auth-container">
+  <h1 class="tituloLog">Iniciar Sesión</h1>
+  <form id="login-form" class="auth-form">
+    <div class="form-group">
+      <label for="email"></label>
+      <input type="email" id="email" name="email" placeholder="Email" style="color:Black; font-size:19px" required class="form-control marginBot1rem">
     </div>
+    <div class="form-group">
+      <label for="password"></label>
+      <input type="password" id="password" name="password"  placeholder="Contraseña" style="color:Black; font-size:19px" required class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+  </form>
+  <p>¿No tienes una cuenta? <a href="/register">Regístrate aquí</a></p>
 </div>
 
-<!-- Modal de éxito -->
-<div id="loginSuccessModal" class="modalLo" style="display: none;">
-    <div class="cardLo">
-        <div class="card-bodyLo">
-            <span class="closeLo" id="closeSuccessModal">&times;</span>
-            <h2 class="card-titleLo">¡Bienvenido!</h2>
-            <p class="LttrLogStyle">Has iniciado sesión correctamente.</p>
-            <div class="btnFlx">
-                <button type="button" class="btn-secondaryLo" id="okSuccess">Ok</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de error -->
-<div id="loginErrorModal" class="modalLo" style="display: none;">
-    <div class="modal-contentLo">
-        <div class="modal-headerLo">
-            <h5 class="modal-titleLo">Error</h5>
-            <button type="button" class="closeLo" id="closeErrorModal">&times;</button>
-        </div>
-        <div class="modal-bodyLo">
-            <p>Ha ocurrido un error al iniciar sesión. Por favor, inténtelo de nuevo.</p>
-        </div>
-        <div class="modal-footerLo">
-            <button type="button" class="btn btn-secondary" id="okError">Ok</button>
-        </div>
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        // Manejamos el evento de envío del formulario
-        $('#loginForm').on('submit', function (event) {
-            event.preventDefault(); // Prevenir la redirección por defecto
-
-            const email = $('#email').val();
-            const password = $('#password').val();
-
-            if (!email || !password) {
-                $('#loginErrorModal').fadeIn();
-                return;
-            }
-
-            console.log("Formulario enviado, enviando datos al servidor...");
-
-            $.ajax({
-                type: 'POST',
-                url: '/login',
-                data: $(this).serialize(),
-                success: function (response) {
-                    if (response.token) {
-                        localStorage.setItem('token', response.token);
-                        $('#loginSuccessModal').fadeIn();
-                    } else {
-                        $('#loginErrorModal').fadeIn();
-                    }
-                },
-                error: function (xhr) {
-                    $('#loginErrorModal').fadeIn();
-                }
-            });
-        });
-
-        // Manejo de eventos para los botones de OK en los modales
-        $('#okSuccess').click(function () {
-            console.log("Cerrando modal de éxito y redirigiendo a la página principal...");
-            window.location.href = '/'; // Redirige a la página de inicio
-        });
-
-        $('#okError').click(function () {
-            console.log("Ocultando modal de error...");
-            $('#loginErrorModal').fadeOut(); // Oculta el modal de error
-        });
-
-        // Cierre del modal al hacer clic en la X
-        $('#closeSuccessModal, #closeErrorModal').click(function () {
-            console.log("Cerrando modal...");
-            $(this).closest('.modalLo').fadeOut(); // Oculta el modal correspondiente
-        });
-    });
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    try {
+      const response = await fetch('/api/sessions/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        window.location.href = data.redirectUrl;
+      } else {
+        alert(data.message || 'Error en el inicio de sesión');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error en el inicio de sesión');
+    }
+  });
 </script>
-
-<style>
-    .modalLo {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-    }
-
-    .modal-contentLo {
-        background: white;
-        padding: 20px;
-        border-radius: 5px;
-        width: 400px;
-        text-align: center;
-    }
-
-    .modal-headerLo {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .closeLo {
-        cursor: pointer;
-        font-size: 20px;
-    }
-</style>
-<script src="/js/index.js"></script>

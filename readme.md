@@ -1,175 +1,113 @@
-# Proyecto de Backend para la Academia Coderhouse
+# Guitar Store - Backend 2 (Entrega 4)
 
-Este proyecto es la primera entrega del curso de Backend 2 en la academia Coderhouse, y es una continuación de las entregas anteriores del curso de Backend 1. Esta entrega incluye la implementación de funcionalidades clave relacionadas con la gestión de usuarios y carritos de compras.
+## Descripción del Proyecto
 
-## Características del Proyecto
+Este proyecto es la continuación y cuarta entrega del curso de Backend, ahora para Backend 2. Guitar Store es una aplicación de comercio electrónico especializada en instrumentos musicales, específicamente guitarras. Esta versión incorpora funcionalidades avanzadas de autenticación, manejo de sesiones y gestión de carritos de compra.
 
-### Backend
+## Características Principales
 
-- **Gestión de Usuarios:**
-  - **Modelo de Usuario:**
-    - Campos:
-      - `first_name`: String
-      - `last_name`: String
-      - `email`: String (único)
-      - `age`: Number
-      - `password`: String (hash)
-      - `cart`: Id con referencia a `Carts`
-      - `role`: String (default: ‘user’)
-    - Se utilizó el paquete **bcrypt** para encriptar contraseñas mediante el método `hashSync`.
-  
-- **Gestión de Carritos:**
-  - **Creación de Carritos:**
-    - Se creó un carrito automáticamente para cada usuario registrado.
-  
-- **Autenticación y Autorización:**
-  - **Estrategias de Passport:**
-    - Implementadas para funcionar con el modelo de usuarios.
-  - **Sistema de Login:**
-    - Autenticación mediante JWT (JSON Web Tokens) para sesiones de usuario.
+1. **Modelo de Usuario Mejorado**:
+   - Campos: `first_name`, `last_name`, `email`, `age`, `password`, `cart`, `role`.
+   - Generación automática de carrito al registrarse.
 
-- **Estrategia “current”:**
-  - Permite extraer el token de la cookie y obtener el usuario asociado.
-  - Devuelve los datos del usuario si el token es válido, o un error en caso contrario.
+2. **Seguridad Mejorada**:
+   - Encriptación de contraseñas utilizando bcrypt.
 
-- **Rutas API:**
-  - Agregada la ruta `/api/sessions/current` para validar al usuario logueado y devolver sus datos asociados al JWT.
+3. **Autenticación Avanzada**:
+   - Implementación de estrategias de Passport.
+   - Sistema de login con JWT (JSON Web Tokens).
 
-### Endpoints
+4. **Manejo de Sesiones**:
+   - Estrategia "current" para extraer y validar tokens de cookies.
+   - Rutas separadas para validación de usuarios en web y API.
 
-- **Usuarios:**
-  - `POST /api/users`: Crear un nuevo usuario.
-  - `GET /api/users/:uid`: Obtener datos de un usuario por ID.
-  - `DELETE /api/users/:uid`: Eliminar un usuario por ID.
+5. **Gestión de Carritos**:
+   - Modelo de carrito con campos `id` y `productos`.
+   - Funcionalidades para agregar, eliminar y obtener productos del carrito de un usuario.
 
-- **Carritos:**
-  - `POST /api/carts`: Crear un nuevo carrito.
-  - `GET /api/carts/:cid`: Obtener un carrito por ID.
-  - `PUT /api/carts/:cid`: Actualizar un carrito existente.
-  - `DELETE /api/carts/:cid`: Eliminar un carrito por ID.
+## Endpoints
 
-  ### Frontend
+### Sesiones y Autenticación
 
-- **Interactividad en Tiempo Real:**
-  - **Socket.io:** Actualiza la lista de productos en tiempo real en la interfaz de usuario sin necesidad de refrescar la página.
-  - **Eventos de WebSocket:** Emisión de eventos dentro de las peticiones POST para la creación y eliminación de productos.
+- `POST /api/sessions/register`: Registro de nuevos usuarios.
+- `POST /api/sessions/login`: Inicio de sesión.
+- `POST /api/sessions/logout`: Cierre de sesión.
+- `GET /api/sessions/current`: Obtener información del usuario actual (versión web).
+- `GET /api/sessions/current-api`: Obtener información del usuario actual (para Postman, requiere bearer token).
 
-- **Vistas Actualizadas:**
-  - **Página de Inicio:** `http://localhost:8080` - Contiene botones para acceder a las vistas de productos, productos en tiempo real, y agregar productos. Incluye una guía de usuario con ejemplos de cómo utilizar los parámetros de consulta.
-  - **Página de Productos:** `http://localhost:8080/products` - Muestra una lista de productos con opción para comprar y paginación.
-  - **Página de Productos en Tiempo Real:** `http://localhost:8080/realtimeproducts` - Actualización en tiempo real de los productos.
-  - **Formulario de Agregar Productos:** `http://localhost:8080/products/add` - Permite añadir nuevos productos manualmente o importando un backup de stock.
-  - **Vista de Detalles del Producto:** `http://localhost:8080/products/:pid` - Detalles completos del producto.
-  - **Vista de Carritos:** `http://localhost:8080/carts/:cid` - Visualiza un carrito específico con los productos correspondientes.
+### Carritos
 
-- **Estilos Personalizados:**
-  - **CSS:** Estilización mejorada para una experiencia de usuario más atractiva, incluyendo una nueva sombra blanca para los botones.
+- `GET /api/carts/:cid`: Obtener un carrito específico (requiere bearer token).
+- `GET /api/carts`: Listar todos los carritos (requiere bearer token).
+- `DELETE /api/carts/:cid`: Eliminar un carrito (requiere bearer token).
+- `POST /api/carts/:cid/products/:pid`: Agregar un producto a un carrito (requiere bearer token).
+- `DELETE /api/carts/:cid/products/:pid`: Eliminar un producto de un carrito (requiere bearer token).
+
+### Productos
+
+- `GET /api/products`: Listar todos los productos.
+- `GET /api/products/:pid`: Obtener un producto específico.
+- `PUT /api/products/:pid`: Actualizar un producto (requiere bearer token).
+
+### Usuarios
+
+- `DELETE /api/users/`: Eliminar un usuario (requiere bearer token).
 
 ## Tecnologías Utilizadas
 
-- **Node.js:** Plataforma de desarrollo backend.
-- **Express:** Framework de Node.js para construir aplicaciones web y APIs.
-- **MongoDB:** Base de datos NoSQL para almacenamiento de datos.
-- **Mongoose:** ODM para MongoDB, facilita la interacción con la base de datos.
-- **Bcrypt:** Biblioteca para encriptar contraseñas.
-- **Passport.js:** Middleware para la autenticación.
-- **JWT:** Método para gestionar sesiones de usuario.
+- Node.js
+- Express.js
+- MongoDB con Mongoose
+- Passport.js
+- JWT para autenticación
+- bcrypt para encriptación
+- Handlebars para vistas
+- Socket.io para comunicación en tiempo real
+- dotenv para manejo de variables de entorno
+- cookie-parser para manejo de cookies
+- express-session para manejo de sesiones
 
-## Ejecución del Proyecto
+## Instalación y Configuración
 
-1. Clona el repositorio.
-2. Instala las dependencias con `npm install`.
-3. Configura las variables de entorno necesarias (por ejemplo, `JWT_SECRET`).
-4. Ejecuta el servidor con `node app.js`.
-5. Utiliza Postman para probar los diferentes endpoints.
+1. Clonar el repositorio:
+    git clone [https://github.com/csluduena/guitar-store-backend.git](https://github.com/csluduena/guitar-store-backend.git)
+2. Instalar dependencias:
+    cd guitar-store-backend npm install
+3. Configurar variables de entorno:
+    Crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
+        MONGODB_URI=tu_uri_de_mongodb
+        JWT_SECRET=tu_secreto_jwt
+        SESSION_SECRET=tu_secreto_de_sesion
+        PORT=8080
+4. Iniciar el servidor:
+    npm run dev
 
-## Contribuciones
+## Uso
 
-Las contribuciones son bienvenidas. Si encuentras algún problema o tienes alguna sugerencia, no dudes en abrir un issue en el repositorio.
+Una vez iniciado el servidor, puedes acceder a la aplicación web a través de `http://localhost:8080`. 
 
-## Autor
+Para pruebas con Postman:
+- Usa `http://localhost:8080/api/sessions/current-api` para obtener información del usuario actual.
+- Para endpoints que requieren autenticación, incluye el bearer token en el header de la solicitud.
 
-Sebastián Ludueña - [Linkedin](https://www.linkedin.com/in/csluduena/) - [GitHub](https://github.com/csluduena) - [Web](https://csluduena.com.ar)
+## Contribución
 
-```
-ExampleEntregaBackend2
-├─ .gitignore
-├─ package-lock.json
-├─ package.json
-├─ readme.md
-└─ src
-   ├─ app.js
-   ├─ config
-   │  └─ passport.js
-   ├─ controllers
-   │  ├─ authController.js
-   │  ├─ cartController.js
-   │  ├─ currentController.js
-   │  ├─ productsController.js
-   │  └─ views.controller.js
-   ├─ dao
-   │  ├─ db
-   │  │  ├─ cart-manager-db.js
-   │  │  └─ product-manager-db.js
-   │  ├─ fs
-   │  │  └─ products.json
-   │  └─ models
-   │     ├─ cart.model.js
-   │     ├─ product.model.js
-   │     └─ user.model.js
-   ├─ database.js
-   ├─ middleware
-   │  └─ auth.js
-   ├─ public
-   │  ├─ css
-   │  │  ├─ indexHLB.css
-   │  │  ├─ login.css
-   │  │  ├─ register.css
-   │  │  └─ style.css
-   │  ├─ fonts
-   │  │  └─ dienasty.otf
-   │  ├─ img
-   │  │  ├─ Alexi-Hexed-1.jpg
-   │  │  ├─ carpiLoco.gif
-   │  │  ├─ carrito.png
-   │  │  ├─ carritoICO.png
-   │  │  ├─ carritoICO2.png
-   │  │  ├─ ESP-LTD-Alexi-Hexed.png
-   │  │  ├─ esp-ltd-kh-v-rdsp-kirk-hammett-guitarra-electrica-red-sparkle.jpg
-   │  │  ├─ esp-ltd-kh-v-rdsp-kirk-hammett-red-sparkle.png
-   │  │  ├─ fender-american-BurstRW.png
-   │  │  ├─ GibsonLesPaul50sTribute2016T.png
-   │  │  ├─ GibsonLesPaulStudio2016T.png
-   │  │  ├─ GibsonLesPaulTraditional2016T.png
-   │  │  ├─ GibsonSGFaded2016T.png
-   │  │  ├─ GibsonSGStandard2016T.png
-   │  │  ├─ guitarBann.gif
-   │  │  ├─ guitarBannW.gif
-   │  │  ├─ guitarBannW2.gif
-   │  │  ├─ PlayerStrat3-ColourSunburstPF.png
-   │  │  ├─ wallG.jpg
-   │  │  ├─ wallG2.png
-   │  │  ├─ wallGBlurred.jpg
-   │  │  └─ wallGBlurred.png
-   │  └─ js
-   │     └─ index.js
-   ├─ routes
-   │  ├─ auth.router.js
-   │  ├─ cart.router.js
-   │  ├─ products.router.js
-   │  └─ views.router.js
-   └─ views
-      ├─ addProduct.handlebars
-      ├─ cart.handlebars
-      ├─ cartDetails.handlebars
-      ├─ error.handlebars
-      ├─ home.handlebars
-      ├─ layouts
-      │  └─ main.handlebars
-      ├─ login.handlebars
-      ├─ products.handlebars
-      ├─ productsDetails.handlebars
-      ├─ realtimeproducts.handlebars
-      └─ register.handlebars
+Si deseas contribuir al proyecto, por favor:
 
-```
+1. Haz un fork del repositorio.
+2. Crea una nueva rama para tu feature (`git checkout -b feature/AmazingFeature`).
+3. Haz commit de tus cambios (`git commit -m 'Add some AmazingFeature'`).
+4. Push a la rama (`git push origin feature/AmazingFeature`).
+5. Abre un Pull Request.
+
+## Contacto
+
+Sebastian Ludueña - [@csluduena](https://linkedin.com/in/csluduena)
+
+Sitio Web: [www.csluduena.com.ar](https://www.csluduena.com.ar)
+
+GitHub: [github.com/csluduena](https://github.com/csluduena)
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.

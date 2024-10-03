@@ -1,6 +1,3 @@
-node_modules
-saveCodeToTxt.js
-codeOutput.txt
-.env
-saveCodeToTxtComplete.js
-saveCodeToTxtConHLB.js
+/codeOutput.txt
+/node_modules
+/saveCodeToTxtComplete.js

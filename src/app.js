@@ -15,7 +15,7 @@ import viewsRouter from "./routes/views.routes.js";
 import sessionRouter from "./routes/session.routes.js";
 import { errorHandler, notFoundHandler } from "./middlewares/error.middleware.js";
 import ProductManager from './dao/db/productManagerDb.js';
-import { fileURLToPath } from 'url'; 
+import { fileURLToPath } from 'url';
 import path from 'path';
 import "./db.js";
 

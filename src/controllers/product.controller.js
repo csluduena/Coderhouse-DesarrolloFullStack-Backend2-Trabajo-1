@@ -1,5 +1,6 @@
 // src/controllers/product.controller.js
 import ProductManager from '../dao/db/productManagerDb.js';
+import { ERROR_CODES, ERROR_MESSAGES } from '../utils/errorCodes.js';
 
 const productManager = new ProductManager();
 
@@ -42,7 +43,7 @@ export const getProducts = async (req, res) => {
             hasNextPage: productsList.hasNextPage,
         });
     } catch (error) {
-        res.status(500).json({ status: "error", message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ status: "error", message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -51,11 +52,11 @@ export const getProductById = async (req, res) => {
     try {
         const product = await productManager.getProductsById(pid);
         if (!product) {
-            return res.status(404).json({ status: "error", message: "Producto no encontrado" });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ status: "error", message: ERROR_MESSAGES.PRODUCT_NOT_FOUND });
         }
         res.json({ status: "success", product });
     } catch (error) {
-        res.status(500).json({ status: "error", message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ status: "error", message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -64,7 +65,7 @@ export const createProduct = async (req, res) => {
         const newProduct = await productManager.addProduct(req.body);
         res.status(201).json({ status: "success", message: "Producto creado exitosamente", product: newProduct });
     } catch (error) {
-        res.status(500).json({ status: "error", message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ status: "error", message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -73,11 +74,11 @@ export const updateProduct = async (req, res) => {
     try {
         const updatedProduct = await productManager.updateProduct(pid, req.body);
         if (!updatedProduct) {
-            return res.status(404).json({ status: "error", message: "Producto no encontrado" });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ status: "error", message: ERROR_MESSAGES.PRODUCT_NOT_FOUND });
         }
         res.json({ status: "success", message: "Producto actualizado exitosamente", product: updatedProduct });
     } catch (error) {
-        res.status(500).json({ status: "error", message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ status: "error", message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -86,10 +87,10 @@ export const deleteProduct = async (req, res) => {
     try {
         const deletedProduct = await productManager.deleteProduct(pid);
         if (!deletedProduct) {
-            return res.status(404).json({ status: "error", message: "Producto no encontrado" });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ status: "error", message: ERROR_MESSAGES.PRODUCT_NOT_FOUND });
         }
         res.json({ status: "success", message: "Producto eliminado exitosamente", product: deletedProduct });
     } catch (error) {
-        res.status(500).json({ status: "error", message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ status: "error", message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };

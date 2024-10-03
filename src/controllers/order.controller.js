@@ -2,6 +2,7 @@ import Order from '../models/order.model.js';
 import Cart from '../models/cart.model.js';
 import { generateUniqueCode, calculateTotalAmount } from '../utils/util.js';
 import { sendOrderConfirmationEmail } from '../services/email.service.js';
+import { ERROR_CODES, ERROR_MESSAGES } from '../utils/errorCodes.js';
 
 export const createOrder = async (req, res) => {
     try {
@@ -9,7 +10,7 @@ export const createOrder = async (req, res) => {
         const cart = await Cart.findOne({ user: userId }).populate('items.product');
 
         if (!cart || cart.items.length === 0) {
-            return res.status(400).json({ message: 'El carrito está vacío' });
+            return res.status(ERROR_CODES.BAD_REQUEST).json({ message: ERROR_MESSAGES.INVALID_QUANTITY });
         }
 
         const orderItems = cart.items.map(item => ({
@@ -40,7 +41,7 @@ export const createOrder = async (req, res) => {
         res.status(201).json({ message: 'Orden creada con éxito', order: newOrder });
     } catch (error) {
         console.error('Error al crear la orden:', error);
-        res.status(500).json({ message: 'Error al crear la orden' });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -50,7 +51,7 @@ export const getOrders = async (req, res) => {
         res.json(orders);
     } catch (error) {
         console.error('Error al obtener las órdenes:', error);
-        res.status(500).json({ message: 'Error al obtener las órdenes' });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -58,11 +59,11 @@ export const getOrderById = async (req, res) => {
     try {
         const order = await Order.findOne({ _id: req.params.id, user: req.user._id });
         if (!order) {
-            return res.status(404).json({ message: 'Orden no encontrada' });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.NOT_FOUND });
         }
         res.json(order);
     } catch (error) {
         console.error('Error al obtener la orden:', error);
-        res.status(500).json({ message: 'Error al obtener la orden' });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };

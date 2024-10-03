@@ -4,14 +4,11 @@ import Cart from '../models/cart.model.js';
 import ProductManager from '../dao/db/productManagerDb.js';
 import CartManager from '../dao/db/cartManagerDb.js';
 import { isAuthenticated, checkUserSession, isAdmin } from '../middlewares/auth.middleware.js';
-
+import { ERROR_CODES, ERROR_MESSAGES } from '../utils/errorCodes.js';
 
 const router = Router();
 const productManager = new ProductManager();
 const cartManager = new CartManager();
-
-
-
 
 router.get('/carts/:cid', async (req, res) => {
     const { cid } = req.params;
@@ -20,9 +17,9 @@ router.get('/carts/:cid', async (req, res) => {
         const cart = await cartManager.getCartById(cid);
 
         if (!cart) {
-            return res.status(404).json({
+            return res.status(ERROR_CODES.NOT_FOUND).json({
                 status: "error",
-                message: "Carrito no encontrado"
+                message: ERROR_MESSAGES.CART_NOT_FOUND
             });
         }
 
@@ -47,9 +44,9 @@ router.get('/carts/:cid', async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({
             status: "error",
-            message: error.message
+            message: ERROR_MESSAGES.SERVER_ERROR
         });
     }
 });
@@ -58,12 +55,12 @@ router.get('/products/:id', isAuthenticated, async (req, res) => {
     try {
         const product = await productManager.getProductById(req.params.id);
         if (!product) {
-            return res.status(404).render('error', { message: 'Producto no encontrado' });
+            return res.status(ERROR_CODES.NOT_FOUND).render('error', { message: ERROR_MESSAGES.PRODUCT_NOT_FOUND });
         }
         res.render('productDetails', { product, user: req.user });
     } catch (error) {
         console.error(error);
-        res.status(500).render('error', { message: 'Error al cargar el producto' });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).render('error', { message: ERROR_MESSAGES.SERVER_ERROR });
     }
 });
 
@@ -78,7 +75,7 @@ router.get('/', async (req, res) => {
         res.render('home', { products: products.docs, user: req.user });
     } catch (error) {
         console.error(error);
-        res.status(500).render('error', { message: 'Error al cargar la página de inicio' });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).render('error', { message: ERROR_MESSAGES.SERVER_ERROR });
     }
 });
 
@@ -103,7 +100,7 @@ router.get('/products', isAuthenticated, async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).render('error', { message: 'Error al cargar los productos' });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).render('error', { message: ERROR_MESSAGES.SERVER_ERROR });
     }
 });
 
@@ -111,11 +108,11 @@ router.get('/cart', isAuthenticated, async (req, res) => {
     try {
         const user = await User.findById(req.user.userId).populate('cart');
         if (!user || !user.cart) {
-            return res.status(404).render('error', { message: 'Carrito no encontrado' });
+            return res.status(ERROR_CODES.NOT_FOUND).render('error', { message: ERROR_MESSAGES.CART_NOT_FOUND });
         }
         const cart = await Cart.findById(user.cart).populate('items.product');
         if (!cart) {
-            return res.status(404).render('error', { message: 'Carrito no encontrado' });
+            return res.status(ERROR_CODES.NOT_FOUND).render('error', { message: ERROR_MESSAGES.CART_NOT_FOUND });
         }
         res.render('cart', {
             cart: cart,
@@ -127,7 +124,7 @@ router.get('/cart', isAuthenticated, async (req, res) => {
         });
     } catch (error) {
         console.error('Error al cargar el carrito:', error);
-        res.status(500).render('error', { message: 'Error al cargar el carrito' });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).render('error', { message: ERROR_MESSAGES.SERVER_ERROR });
     }
 });
 

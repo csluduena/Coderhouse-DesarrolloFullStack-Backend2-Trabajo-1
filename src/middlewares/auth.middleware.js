@@ -1,6 +1,8 @@
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import { config } from "dotenv";
+import { ERROR_CODES, ERROR_MESSAGES } from '../utils/errorCodes.js';
+
 config();
 
 const jwtSecret = process.env.JWT_SECRET;
@@ -8,7 +10,7 @@ const jwtSecret = process.env.JWT_SECRET;
 export const isAuthenticated = (req, res, next) => {
     const token = req.cookies['token'];
     if (!token) {
-        return res.status(401).redirect('/login');
+        return res.status(ERROR_CODES.UNAUTHORIZED).redirect('/login');
     }
 
     try {
@@ -17,7 +19,7 @@ export const isAuthenticated = (req, res, next) => {
         next();
     } catch (error) {
         res.clearCookie('token');
-        return res.status(401).redirect('/login');
+        return res.status(ERROR_CODES.UNAUTHORIZED).redirect('/login');
     }
 };
 
@@ -25,7 +27,7 @@ export const isAdmin = (req, res, next) => {
     if (req.user && req.user.role === 'admin') {
         next();
     } else {
-        res.status(403).json({ message: "Acceso denegado. Se requieren permisos de administrador." });
+        res.status(ERROR_CODES.FORBIDDEN).json({ message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS });
     }
 };
 

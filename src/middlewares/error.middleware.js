@@ -1,8 +1,10 @@
+import { ERROR_CODES, ERROR_MESSAGES } from '../utils/errorCodes.js';
+
 export const errorHandler = (err, req, res, next) => {
     console.error(err.stack);
 
-    const statusCode = err.statusCode || 500;
-    const message = err.message || 'Algo salió mal';
+    const statusCode = err.statusCode || ERROR_CODES.INTERNAL_SERVER_ERROR;
+    const message = err.message || ERROR_MESSAGES.SERVER_ERROR;
 
     res.status(statusCode).json({
         status: 'error',
@@ -13,6 +15,6 @@ export const errorHandler = (err, req, res, next) => {
 
 export const notFoundHandler = (req, res, next) => {
     const error = new Error(`Not Found - ${req.originalUrl}`);
-    res.status(404);
+    error.statusCode = ERROR_CODES.NOT_FOUND; 
     next(error);
 };

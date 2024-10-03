@@ -1,16 +1,17 @@
 import Cart from '../models/cart.model.js';
 import Product from '../models/product.model.js';
+import { ERROR_CODES, ERROR_MESSAGES } from '../utils/errorCodes.js';
 
 export const getCart = async (req, res) => {
     try {
         const { cid } = req.params;
         const cart = await Cart.findById(cid).populate('items.product');
         if (!cart) {
-            return res.status(404).json({ message: "Carrito no encontrado" });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.CART_NOT_FOUND });
         }
         res.status(200).json(cart);
     } catch (error) {
-        res.status(500).json({ message: "Error interno del servidor" });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -23,7 +24,7 @@ export const addToCart = async (req, res) => {
         }
         const product = await Product.findById(productId);
         if (!product) {
-            return res.status(404).json({ message: 'Producto no encontrado' });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.PRODUCT_NOT_FOUND });
         }
         const existingItem = cart.items.find(item => item.product.toString() === productId);
         if (existingItem) {
@@ -35,7 +36,7 @@ export const addToCart = async (req, res) => {
         res.status(201).json(cart);
     } catch (error) {
         console.error('Error al añadir al carrito:', error);
-        res.status(500).json({ message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -44,13 +45,13 @@ export const removeFromCart = async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user.userId });
         if (!cart) {
-            return res.status(404).json({ message: 'Carrito no encontrado' });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.CART_NOT_FOUND });
         }
         cart.items = cart.items.filter(item => item._id.toString() !== itemId);
         await cart.save();
         res.json({ message: 'Item eliminado del carrito', cart });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -60,17 +61,17 @@ export const updateCartItem = async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user.userId });
         if (!cart) {
-            return res.status(404).json({ message: 'Carrito no encontrado' });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.CART_NOT_FOUND });
         }
         const item = cart.items.id(itemId);
         if (!item) {
-            return res.status(404).json({ message: 'Item no encontrado en el carrito' });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.CART_NOT_FOUND });
         }
         item.quantity = quantity;
         await cart.save();
         res.json(cart);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -78,12 +79,12 @@ export const clearCart = async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user._id });
         if (!cart) {
-            return res.status(404).json({ message: 'Carrito no encontrado' });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.CART_NOT_FOUND });
         }
         cart.items = [];
         await cart.save();
         res.json({ message: 'Carrito vaciado con éxito' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };

@@ -2,6 +2,7 @@ import User from '../models/user.model.js';
 import Cart from '../models/cart.model.js';
 import jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
+import { ERROR_CODES, ERROR_MESSAGES } from '../utils/errorCodes.js';
 
 config();
 
@@ -12,7 +13,7 @@ export const register = async (req, res) => {
         const { first_name, last_name, email, age, password } = req.body;
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ message: 'El usuario ya existe' });
+            return res.status(ERROR_CODES.BAD_REQUEST).json({ message: ERROR_MESSAGES.USER_ALREADY_EXISTS });
         }
 
         const user = new User({ first_name, last_name, email, age, password });
@@ -25,14 +26,14 @@ export const register = async (req, res) => {
         await user.save();
 
         const token = jwt.sign(
-            { 
-                userId: user._id, 
-                first_name: user.first_name, 
-                last_name: user.last_name, 
-                email: user.email, 
-                age: user.age, 
-                role: user.role, 
-                cart: user.cart 
+            {
+                userId: user._id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                age: user.age,
+                role: user.role,
+                cart: user.cart
             },
             jwtSecret,
             { expiresIn: '1h' }
@@ -63,7 +64,7 @@ export const register = async (req, res) => {
             redirectUrl: '/api/sessions/current'
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -73,7 +74,7 @@ export const login = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user || !(await user.comparePassword(password))) {
-            return res.status(401).json({ message: 'Credenciales inválidas' });
+            return res.status(ERROR_CODES.UNAUTHORIZED).json({ message: ERROR_MESSAGES.INVALID_CREDENTIALS });
         }
 
         if (!user.cart) {
@@ -84,14 +85,14 @@ export const login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { 
-                userId: user._id, 
-                first_name: user.first_name, 
-                last_name: user.last_name, 
-                email: user.email, 
-                age: user.age, 
-                role: user.role, 
-                cart: user.cart 
+            {
+                userId: user._id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                age: user.age,
+                role: user.role,
+                cart: user.cart
             },
             jwtSecret,
             { expiresIn: '1h' }
@@ -120,7 +121,7 @@ export const login = async (req, res) => {
             redirectUrl: '/api/sessions/current'
         });
     } catch (error) {
-        res.status(500).json({ message: 'Error, credenciales incorrectas' });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -137,11 +138,11 @@ export const getProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.userId).select('-password');
         if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.USER_NOT_FOUND });
         }
         res.json(user);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };
 
@@ -153,10 +154,10 @@ export const updateProfile = async (req, res) => {
             { new: true }
         ).select('-password');
         if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+            return res.status(ERROR_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.USER_NOT_FOUND });
         }
         res.json(user);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 };

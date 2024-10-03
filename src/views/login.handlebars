@@ -10,9 +10,12 @@
       <input type="password" id="password" name="password"  placeholder="Contraseña" style="color:Black; font-size:19px" required class="form-control">
     </div>
     <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-  </form>
-  <p class="noAcc">¿No tienes una cuenta?</p>  <p class="noAcc2"><a href="/register">Regístrate aquí</a></p>
-</div>
+<p class="noAcc">¿No tienes una cuenta?</p>  
+  <p class="noAcc2"><a href="/register">Regístrate aquí</a></p><hr style="width: 100px; color:red; margin-top:1rem;">
+  <p style="margin-top:1rem;">O inicia sesión con:</p>
+  <a href="/api/sessions/github" class="btn btn-github">
+    <i class="fab fa-github"></i> Iniciar sesión con GitHub
+  </a>
 
 <script>
   document.getElementById('login-form').addEventListener('submit', async (e) => {

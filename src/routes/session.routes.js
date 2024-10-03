@@ -1,14 +1,13 @@
 import { Router } from "express";
 import { isAuthenticated } from "../middlewares/auth.middleware.js";
 import User from '../models/user.model.js';
-import { createHash, isValidPassword } from "../utils/util.js";
+import { createHash, isValidPassword } from "../utils/util.js"
 import { config } from "dotenv";
 import CartManager from "../dao/db/cartManagerDb.js";
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import passport from "passport";
 import { register, login, logout, getCurrentUser } from '../controllers/user.controller.js';
-import { ERROR_CODES, ERROR_MESSAGES } from '../utils/errorCodes.js';
 
 config();
 
@@ -30,16 +29,20 @@ router.get('/current-api', (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (token == null) return res.sendStatus(ERROR_CODES.UNAUTHORIZED);
+    if (token == null) return res.sendStatus(401);
 
     jwt.verify(token, jwtSecret, (err, user) => {
-        if (err) return res.sendStatus(ERROR_CODES.FORBIDDEN);
+        if (err) return res.sendStatus(403);
         res.json({ user });
     });
 });
 
-// Obtener la información del usuario actual
+//Obtener la información del usuario actual
 router.get("/user", isAuthenticated, (req, res) => {
+    res.json({ user: req.user });
+});
+
+router.get('/current', isAuthenticated, (req, res) => {
     res.json({ user: req.user });
 });
 
@@ -57,7 +60,7 @@ router.post("/register", async (req, res) => {
         const userExists = await User.findOne({ email });
 
         if (userExists) {
-            return res.status(ERROR_CODES.BAD_REQUEST).send(ERROR_MESSAGES.USER_ALREADY_EXISTS);
+            return res.status(400).send("User already exists");
         }
 
         const user = new User({
@@ -76,7 +79,7 @@ router.post("/register", async (req, res) => {
         await user.save();
 
         const token = jwt.sign(
-            { userId: user._id, name: user.name, lastName: user.lastName, email: user.email, age: user.age, cart: user.cart },
+            { userId: user._id, name: user.name, lastName: user.last_name, email: user.email, age: user.age, cart: user.cart },
             jwtSecret,
             { expiresIn: "1h" }
         );
@@ -93,13 +96,18 @@ router.post("/register", async (req, res) => {
             redirectUrl: '/api/sessions/current'
         });
     } catch (error) {
-        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).send(ERROR_MESSAGES.SERVER_ERROR);
+        res.status(500).send(error.message);
     }
+});
+
+router.get('/current', isAuthenticated, (req, res) => {
+    res.render('current-session', { user: req.user });
 });
 
 // Login
 router.post("/login", async (req, res) => {
-    if (req.user && req.user.role === 'admin') {
+
+    if (req.user && req.user.role == 'admin') {
         return res.redirect('/api/sessions/current')
     }
 
@@ -115,11 +123,11 @@ router.post("/login", async (req, res) => {
         const foundUser = await userModel.findOne({ email });
 
         if (!foundUser) {
-            return res.status(ERROR_CODES.UNAUTHORIZED).send(ERROR_MESSAGES.INVALID_CREDENTIALS);
+            return res.status(401).send(registerRedirect);
         }
 
         if (!isValidPassword(password, foundUser)) {
-            return res.status(ERROR_CODES.UNAUTHORIZED).send(ERROR_MESSAGES.INVALID_CREDENTIALS);
+            return res.status(401).send("Invalid password");
         }
 
         if (!foundUser.cart) {
@@ -129,7 +137,7 @@ router.post("/login", async (req, res) => {
         }
 
         const token = jwt.sign(
-            { name: foundUser.name, lastName: foundUser.lastName, role: foundUser.role, email: foundUser.email, age: foundUser.age, cart: foundUser.cart },
+            { name: foundUser.name, lastName: foundUser.last_name, role: foundUser.role, email: foundUser.email, age: foundUser.age, cart: foundUser.cart },
             jwtSecret,
             { expiresIn: "1h" }
         );
@@ -139,7 +147,7 @@ router.post("/login", async (req, res) => {
             maxAge: 3600000,
         }).redirect('/api/sessions/current');
     } catch (error) {
-        res.status(ERROR_CODES.INTERNAL_SERVER_ERROR).send(ERROR_MESSAGES.SERVER_ERROR);
+        res.status(500).send(error.message);
     }
 });
 
@@ -156,7 +164,7 @@ router.get('/current', isAuthenticated, (req, res) => {
 
 // Admin
 router.get('/admin', passport.authenticate('current', { session: false }), async (req, res) => {
-    if (req.user.role !== 'admin') return res.status(ERROR_CODES.FORBIDDEN).send(ERROR_MESSAGES.UNAUTHORIZED_ACCESS);
+    if (req.user.role !== 'admin') res.status(403).send('No eres Admin!');
     console.log(req.cookies['token']);
 
     res.render('realTimeProducts', { user: req.user });
@@ -169,7 +177,7 @@ router.get('/', (req, res, next) => {
             return next(err);
         }
         if (!user) {
-            return res.status(ERROR_CODES.UNAUTHORIZED).json({ message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS });
+            return res.status(100).json({ message: 'Unauthenticated' });
         }
         req.user = user;
         const cart = await manager.getCartById(req.user.cart);
@@ -182,5 +190,28 @@ router.get('/cart', passport.authenticate('current', { session: false }), async 
     const cart = await manager.getCartById(req.user.cart);
     res.render('cart', { cartId: req.user.cart, products: cart.products });
 })
+
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+router.get('/github/callback', passport.authenticate('github', { failureRedirect: '/login' }),
+    (req, res) => {
+        const token = jwt.sign(
+            { 
+                userId: req.user._id, 
+                first_name: req.user.first_name, 
+                last_name: req.user.last_name, 
+                email: req.user.email, 
+                age: req.user.age, 
+                role: req.user.role, 
+                cart: req.user.cart 
+            },
+            jwtSecret,
+            { expiresIn: '1h' }
+        );
+
+        res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+        res.redirect('/api/sessions/current');
+    }
+);
 
 export default router;

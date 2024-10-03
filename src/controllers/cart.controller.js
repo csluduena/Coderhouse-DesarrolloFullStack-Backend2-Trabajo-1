@@ -8,9 +8,9 @@ export const getCart = async (req, res) => {
         if (!cart) {
             return res.status(404).json({ message: "Carrito no encontrado" });
         }
-        res.json(cart);
+        res.status(200).json(cart);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Error interno del servidor" });
     }
 };
 

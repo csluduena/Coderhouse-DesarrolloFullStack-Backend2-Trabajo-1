@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
 
         const result = await manager.getProducts(page, limit, sort);
 
-        res.json({
+        res.status(200).json({
             status: "success",
             payload: result.docs,
             totalPages: result.totalPages,
@@ -46,17 +46,20 @@ router.get('/', async (req, res) => {
             nextLink: result.hasNextPage ? `/api/products?page=${result.nextPage}&limit=${limit}&sort=${querySort}` : null
         });
     } catch (error) {
-        res.status(500).json({ status: "error", message: error.message });
+        res.status(500).json({ status: "error", message: "Error interno del servidor" });
     }
 });
 
 router.get("/:pid", async (req, res) => {
     let id = req.params.pid;
     try {
-        const product = await manager.getProductsById(id);
-        !product ? res.send("No se encuentra el producto deseado") : res.send({ product });
+        const product = await manager.getProductById(id);
+        if (!product) {
+            return res.status(404).json({ status: "error", message: "Producto no encontrado" });
+        }
+        res.status(200).json({ status: "success", product });
     } catch (error) {
-        console.log(error)
+        res.status(500).json({ status: "error", message: "Error interno del servidor" });
     }
 });
 
@@ -69,17 +72,6 @@ router.post("/", async (req, res) => {
         res.status(500).send({ status: "error", message: error.message });
     }
 });
-
-// router.put("/:pid", async (req, res) => {
-//     const id = req.params.pid;
-//     const newData = req.body;
-//     try {
-//         const updatedProduct = await manager.updateProduct(id, newData);
-//         !updatedProduct ? res.status(404).send({ message: "Error al actualizar el producto" }) : res.status(200).send(`Se ha actualizado el producto ${newData.title} correctamente`);
-//     } catch (error) {
-//         res.status(500).send({ status: "error", message: error.message });
-//     }
-// });
 
 //Ruta para agregar stock a un producto
 router.put("/:pid", async (req, res) => {

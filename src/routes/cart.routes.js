@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
         }
         res.json(userCart);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Error interno del servidor" });
     }
 });
 
@@ -44,7 +44,7 @@ router.post('/:cid/products/:pid', async (req, res) => {
         await cart.save();
         res.status(200).json(cart);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Error interno del servidor" });
     }
 });
 
@@ -57,7 +57,7 @@ router.delete('/:cid', async (req, res) => {
         }
         res.status(200).json({ message: "Carrito eliminado con éxito" });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Error interno del servidor" });
     }
 });
 

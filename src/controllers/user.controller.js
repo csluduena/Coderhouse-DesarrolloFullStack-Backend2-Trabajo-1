@@ -120,7 +120,7 @@ export const login = async (req, res) => {
             redirectUrl: '/api/sessions/current'
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error, credenciales incorrectas' });
     }
 };
 

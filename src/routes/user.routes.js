@@ -11,11 +11,14 @@ router.put('/profile', isAuthenticated, updateProfile);
 
 router.delete('/', isAuthenticated, async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.user.userId);
+        const deletedUser = await User.findByIdAndDelete(req.user.userId);
+        if (!deletedUser) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
         res.clearCookie('token');
         res.status(200).json({ message: "Usuario eliminado con éxito" });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Error interno del servidor" });
     }
 });
 
